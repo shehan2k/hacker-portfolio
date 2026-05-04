@@ -30,6 +30,7 @@ export default function Home() {
     bio: true,
     src: true,
     config: true,
+    certifications: true, // Add this line
   });
 
   const toggleFolder = (folder: keyof typeof openFolders) => {
