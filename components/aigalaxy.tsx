@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useMemo, useState } from "react";
+import React, { useRef, useMemo, useState, useEffect } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Points, PointMaterial, OrbitControls, Html } from "@react-three/drei";
 import * as THREE from "three";
@@ -24,13 +24,20 @@ function PlanetNode({ name, position, onClick }: { name: string; position: [numb
   const meshRef = useRef<THREE.Mesh>(null!);
   const [hovered, setHover] = useState(false);
 
+  useEffect(() => {
+    if (hovered) {
+      document.body.style.cursor = "pointer";
+    } else {
+      document.body.style.cursor = "auto";
+    }
+  }, [hovered]);
+
   return (
     <group position={position} onClick={(e) => { e.stopPropagation(); onClick?.(); }}>
       <mesh 
         ref={meshRef} 
         onPointerOver={() => setHover(true)} 
         onPointerOut={() => setHover(false)}
-        className="cursor-pointer"
       >
         <sphereGeometry args={[hovered ? 0.4 : 0.3, 16, 16]} />
         <meshStandardMaterial 
