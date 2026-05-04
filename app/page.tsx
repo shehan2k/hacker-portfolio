@@ -11,11 +11,11 @@ import LoadingScreen from "@/components/loadingscreen";
 
 export default function Home() {
   const certificateDetails: Record<string, { title: string; uni: string; issued: string; link: string }> = {
-    "/cert1.png": { title: "Advanced Learning Algorithms", uni: "STANFORD / DEEPLEARNINGAI", issued: "2023", link: "https://www.coursera.org/account/accomplishments/verify/F8PFCNW7AF79" },
-    "/cert 2.png": { title: "Supervised Machine Learning", uni: "STANFORD / DEEPLEARNINGAI", issued: "2023", link: "https://www.coursera.org/account/accomplishments/verify/XPLEP85DGNNU" },
-    "/cert 3.png": { title: "Unsupervised Machine Learning", uni: "STANFORD / DEEPLEARNINGAI", issued: "2024", link: "https://www.coursera.org/account/accomplishments/verify/61SNZ4IM2V3S" },
-    "/cert 4.png": { title: "Machine Learning", uni: "STANFORD / DEEPLEARNINGAI", issued: "2022", link: "https://www.coursera.org/account/accomplishments/specialization/44GDQWUEBNDH" },
-    "/cert 5.png": { title: "Oracle AI Foundations Associate", uni: "ORACLE", issued: "2023", link: "https://catalog-education.oracle.com/ords/certview/sharebadge?id=2CD00FBCCDE656AEA1670C487E0B6B02B229BE03A6DBA0E9B66FD55B0A5C763F" },
+    "/CERT1.png": { title: "Advanced Learning Algorithms", uni: "STANFORD / DEEPLEARNINGAI", issued: "2023", link: "https://www.coursera.org/account/accomplishments/verify/F8PFCNW7AF79" },
+    "/CERT 2.png": { title: "Supervised Machine Learning", uni: "STANFORD / DEEPLEARNINGAI", issued: "2023", link: "https://www.coursera.org/account/accomplishments/verify/XPLEP85DGNNU" },
+    "/CERT 3.png": { title: "Unsupervised Machine Learning", uni: "STANFORD / DEEPLEARNINGAI", issued: "2024", link: "https://www.coursera.org/account/accomplishments/verify/61SNZ4IM2V3S" },
+    "/CERT 4.png": { title: "Machine Learning", uni: "STANFORD / DEEPLEARNINGAI", issued: "2022", link: "https://www.coursera.org/account/accomplishments/specialization/44GDQWUEBNDH" },
+    "/CERT 5.png": { title: "Oracle AI Foundations Associate", uni: "ORACLE", issued: "2023", link: "https://catalog-education.oracle.com/ords/certview/sharebadge?id=2CD00FBCCDE656AEA1670C487E0B6B02B229BE03A6DBA0E9B66FD55B0A5C763F" },
   };
 
   const [isLoading, setIsLoading] = useState(true);
