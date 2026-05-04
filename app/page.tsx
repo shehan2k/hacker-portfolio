@@ -416,7 +416,7 @@ export default function Home() {
                     </p>
                   </div>
                   <a
-                    href="/cv.pdf"
+                    href="/CV.pdf"
                     download
                     target="_blank"
                     rel="noopener noreferrer"
