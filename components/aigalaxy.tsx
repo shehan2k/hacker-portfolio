@@ -7,10 +7,17 @@ import * as THREE from "three";
 
 // Configuration for planets
 const skillClusters = [
-  { name: "ML_CORE", position: [1.5, 0.5, 2.0] },
-  { name: "ANN_NET", position: [-1.2, -0.8, -1.5] },
-  { name: "REACT_EXP", position: [0.5, 1.2, 1.0] },
-  { name: "DATA_OPS", position: [-1.8, 1.0, -2.5] },
+  { name: "Machine_Learning", position: [-1.5, 0.5, -4.0] },
+  { name: "Artificial_Neural_Networks", position: [-4.2, -0.8, -1.5] },
+  { name: "Specialized_AI", position: [0.5, 0.6, 1.0] },
+  { name: "Logic_and_Search", position: [-3.8, 0.7, -2.5] },
+  { name: "LLMs_and_GenAI", position: [2.5, -0.5, 0.9] },
+  { name: "Mobile_and_Web_Development", position: [-2.5, -0.6, 1.8] },
+  { name: "Programming_Languages", position: [3.0, -0.5, -2.0] },
+  { name: "Databases_and_Cloud", position: [-3.0, 0.7, 3.5] },
+  { name: "UI_UX_and_Design_Thinking", position: [1.5, 0.7, -4.0] },
+  { name: "Customer_Excellence", position: [0, -0.5, 2.0] },
+  { name: "Administrative_and_Productivity", position: [-1.2, -0.8, -1.5] },
 ];
 
 function PlanetNode({ name, position, onClick }: { name: string; position: [number, number, number]; onClick?: () => void }) {
