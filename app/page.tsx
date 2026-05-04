@@ -417,7 +417,6 @@ export default function Home() {
                   </div>
                   <a
                     href="/cv.pdf"
-                    download
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-[#00f2ff] visited:text-[#00f2ff] hover:scale-110 transition-transform duration-300 drop-shadow-[0_0_8px_rgba(0,242,255,0.5)]"
