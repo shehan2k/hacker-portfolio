@@ -132,45 +132,45 @@ export default function Home() {
               {openFolders.certifications && (
                 <>
                   <div
-                    className={`flex items-center gap-1 ml-4 cursor-pointer hover:text-matrix-green transition-colors ${selectedCertificate === "/cert1.png" ? "text-matrix-green shadow-[0_0_5px_rgba(0,255,65,0.3)]" : "opacity-60"}`}
+                    className={`flex items-center gap-1 ml-4 cursor-pointer hover:text-matrix-green transition-colors ${selectedCertificate === "/CERT1.png" ? "text-matrix-green shadow-[0_0_5px_rgba(0,255,65,0.3)]" : "opacity-60"}`}
                     onClick={() => {
-                      setSelectedCertificate("/cert1.png");
+                      setSelectedCertificate("/CERT1.png");
                       setShowGlobe(false);
                     }}
                   >
                     <span>📄</span> Advanced Learning Algorithms
                   </div>
                   <div
-                    className={`flex items-center gap-1 ml-4 cursor-pointer hover:text-matrix-green transition-colors ${selectedCertificate === "/cert 2.png" ? "text-matrix-green shadow-[0_0_5px_rgba(0,255,65,0.3)]" : "opacity-60"}`}
+                    className={`flex items-center gap-1 ml-4 cursor-pointer hover:text-matrix-green transition-colors ${selectedCertificate === "/CERT 2.png" ? "text-matrix-green shadow-[0_0_5px_rgba(0,255,65,0.3)]" : "opacity-60"}`}
                     onClick={() => {
-                      setSelectedCertificate("/cert 2.png");
+                      setSelectedCertificate("/CERT 2.png");
                       setShowGlobe(false);
                     }}
                   >
                     <span>📄</span> Supervised Machine Learning
                   </div>
                   <div
-                    className={`flex items-center gap-1 ml-4 cursor-pointer hover:text-matrix-green transition-colors ${selectedCertificate === "/cert 3.png" ? "text-matrix-green shadow-[0_0_5px_rgba(0,255,65,0.3)]" : "opacity-60"}`}
+                    className={`flex items-center gap-1 ml-4 cursor-pointer hover:text-matrix-green transition-colors ${selectedCertificate === "/CERT 3.png" ? "text-matrix-green shadow-[0_0_5px_rgba(0,255,65,0.3)]" : "opacity-60"}`}
                     onClick={() => {
-                      setSelectedCertificate("/cert 3.png");
+                      setSelectedCertificate("/CERT 3.png");
                       setShowGlobe(false);
                     }}
                   >
                     <span>📄</span> Unsupervised Machine Learning
                   </div>
                   <div
-                    className={`flex items-center gap-1 ml-4 cursor-pointer hover:text-matrix-green transition-colors ${selectedCertificate === "/cert 4.png" ? "text-matrix-green shadow-[0_0_5px_rgba(0,255,65,0.3)]" : "opacity-60"}`}
+                    className={`flex items-center gap-1 ml-4 cursor-pointer hover:text-matrix-green transition-colors ${selectedCertificate === "/CERT 4.png" ? "text-matrix-green shadow-[0_0_5px_rgba(0,255,65,0.3)]" : "opacity-60"}`}
                     onClick={() => {
-                      setSelectedCertificate("/cert 4.png");
+                      setSelectedCertificate("/CERT 4.png");
                       setShowGlobe(false);
                     }}
                   >
                     <span>📄</span> Machine Learning
                   </div>
                   <div
-                    className={`flex items-center gap-1 ml-4 cursor-pointer hover:text-matrix-green transition-colors ${selectedCertificate === "/cert 5.png" ? "text-matrix-green shadow-[0_0_5px_rgba(0,255,65,0.3)]" : "opacity-60"}`}
+                    className={`flex items-center gap-1 ml-4 cursor-pointer hover:text-matrix-green transition-colors ${selectedCertificate === "/CERT 5.png" ? "text-matrix-green shadow-[0_0_5px_rgba(0,255,65,0.3)]" : "opacity-60"}`}
                     onClick={() => {
-                      setSelectedCertificate("/cert 5.png");
+                      setSelectedCertificate("/CERT 5.png");
                       setShowGlobe(false);
                     }}
                   >
@@ -417,6 +417,7 @@ export default function Home() {
                   </div>
                   <a
                     href="/cv.pdf"
+                    download
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-[#00f2ff] visited:text-[#00f2ff] hover:scale-110 transition-transform duration-300 drop-shadow-[0_0_8px_rgba(0,242,255,0.5)]"
