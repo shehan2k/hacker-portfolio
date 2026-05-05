@@ -75,6 +75,59 @@ function PlanetNode({ name, position, onClick, isSelected }: { name: string; pos
   );
 }
 
+function Meteor() {
+  const ref = useRef<THREE.Mesh>(null!);
+  const [dir] = useState(() => new THREE.Vector3(Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5).normalize());
+  const [pos] = useState(() => dir.clone().multiplyScalar(-20 + Math.random() * 20));
+  const speed = 0.1 + Math.random() * 0.1;
+
+  useFrame(() => {
+    if (ref.current) {
+      ref.current.position.addScaledVector(dir, speed);
+      if (ref.current.position.length() > 25) ref.current.position.copy(dir).multiplyScalar(-25);
+    }
+  });
+
+  return (
+    <mesh ref={ref} position={pos} quaternion={new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 0, 1), dir)}>
+      <boxGeometry args={[0.02, 0.02, 0.5]} />
+      <meshStandardMaterial color="#d99606" emissive="#ff4000" emissiveIntensity={10} transparent opacity={0.4} />
+    </mesh>
+  );
+}
+
+function Spaceship() {
+  const ref = useRef<THREE.Group>(null!);
+  const [dir] = useState(() => new THREE.Vector3(Math.random() - 0.5, (Math.random() - 0.5) * 0.3, Math.random() - 0.5).normalize());
+  const [pos] = useState(() => dir.clone().multiplyScalar(-15 + Math.random() * 30));
+  const speed = 0.02 + Math.random() * 0.03;
+
+  useFrame((state) => {
+    if (ref.current) {
+      ref.current.position.addScaledVector(dir, speed);
+      if (ref.current.position.length() > 20) ref.current.position.copy(dir).multiplyScalar(-20);
+      const signal = ref.current.children[1] as THREE.Mesh;
+      if (signal) {
+        (signal.material as THREE.MeshStandardMaterial).emissiveIntensity = 2 + Math.sin(state.clock.elapsedTime * 12) * 2;
+        (signal.material as THREE.MeshStandardMaterial).opacity = 1;
+      }
+    }
+  });
+
+  return (
+    <group ref={ref} position={pos} quaternion={new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 0, 1), dir)}>
+      <mesh rotation={[Math.PI / 3, 0, 0]}>
+        <coneGeometry args={[0.05, 0.2, 3]} />
+        <meshStandardMaterial color="#ffffff" transparent opacity={1} />
+      </mesh>
+      <mesh position={[0, 0.06, 0]}>
+        <sphereGeometry args={[0.02, 4, 4]} />
+        <meshStandardMaterial color="#ffffff" emissive="#fc5800" transparent />
+      </mesh>
+    </group>
+  );
+}
+
 function GalaxySystem({ onNodeClick, selectedNode }: { onNodeClick?: (name: string | null) => void; selectedNode: string | null }) {
   const groupRef = useRef<THREE.Group>(null!);
   
@@ -84,27 +137,32 @@ function GalaxySystem({ onNodeClick, selectedNode }: { onNodeClick?: (name: stri
   });
 
   // Particle generation
-  const particles = useMemo(() => {
-    const count = 5000;
+  const { positions, colors } = useMemo(() => {
+    const count = 10000;
     const positions = new Float32Array(count * 3);
+    const colors = new Float32Array(count * 3);
     const numArms = 3;
     const spin = 1.2;
+    const colorWhite = new THREE.Color("#ffffff");
+    const colorPurple = new THREE.Color("#783fad");
+    const colorBlue = new THREE.Color("#1101e4");
 
     for (let i = 0; i < count; i++) {
       const i3 = i * 3;
+      let radius = 0;
 
       // Central bulge (25% of particles)
       if (i < count * 0.25) {
-        const r = Math.random() * 1.2;
+        radius = Math.random() * 1.2;
         const phi = Math.random() * Math.PI * 2;
         const theta = Math.acos(2 * Math.random() - 1);
 
-        positions[i3] = r * Math.sin(theta) * Math.cos(phi);
-        positions[i3 + 1] = r * Math.sin(theta) * Math.sin(phi) * 0.8;
-        positions[i3 + 2] = r * Math.cos(theta);
+        positions[i3] = radius * Math.sin(theta) * Math.cos(phi);
+        positions[i3 + 1] = radius * Math.sin(theta) * Math.sin(phi) * 0.8;
+        positions[i3 + 2] = radius * Math.cos(theta);
       } else {
         // Spiral arms
-        const radius = 0.8 + Math.random() * 4.5;
+        radius = 0.8 + Math.random() * 4.5;
         const armAngle = (i % numArms) * (Math.PI * 2 / numArms);
         const spiralAngle = radius * spin;
 
@@ -115,14 +173,36 @@ function GalaxySystem({ onNodeClick, selectedNode }: { onNodeClick?: (name: stri
         positions[i3 + 1] = (Math.random() - 0.5) * (2.0 / (radius * 0.8 + 1));
         positions[i3 + 2] = Math.sin(armAngle + spiralAngle) * radius + Math.sin(offsetAngle) * offsetR;
       }
+
+      // Determine color based on distance from center
+      let mixedColor = colorWhite.clone();
+      if (radius < 1.0) {
+        // Core to Inner: White to Purple
+        mixedColor.lerp(colorPurple, radius / 1.0);
+      } else {
+        // Inner to Outer: Purple to Dark Blue
+        const t = Math.min(1, (radius - 1.0) / 4.0);
+        mixedColor = colorPurple.clone().lerp(colorBlue, t);
+      }
+
+      colors[i3] = mixedColor.r;
+      colors[i3 + 1] = mixedColor.g;
+      colors[i3 + 2] = mixedColor.b;
     }
-    return positions;
+    return { positions, colors };
   }, []);
 
   return (
     <group ref={groupRef}>
-      <Points positions={particles} stride={3} frustumCulled={false}>
-        <PointMaterial transparent color="#dcbd23" size={0.03} sizeAttenuation depthWrite={false} blending={THREE.AdditiveBlending} />
+      <Points positions={positions} colors={colors} stride={3} frustumCulled={false}>
+        <PointMaterial 
+          transparent 
+          vertexColors 
+          size={0.05} 
+          sizeAttenuation 
+          depthWrite={false} 
+          blending={THREE.AdditiveBlending} 
+        />
       </Points>
       {skillClusters.map((node, index) => (
         <PlanetNode 
@@ -133,6 +213,10 @@ function GalaxySystem({ onNodeClick, selectedNode }: { onNodeClick?: (name: stri
           isSelected={selectedNode === node.name}
         />
       ))}
+
+      {/* Ambient Space Traffic */}
+      {Array.from({ length: 8 }).map((_, i) => <Meteor key={`m-${i}`} />)}
+      {Array.from({ length: 5 }).map((_, i) => <Spaceship key={`s-${i}`} />)}
     </group>
   );
 }

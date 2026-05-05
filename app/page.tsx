@@ -96,8 +96,8 @@ export default function Home() {
               {openFolders.src && (
                 <>
                   <div
-                    className={`flex items-center gap-1 ml-4 cursor-pointer hover:text-matrix-green transition-colors ${activeView === "ai-galaxy" ? "text-matrix-green shadow-[0_0_5px_rgba(0,255,65,0.3)]" : "opacity-60"}`}
-                    onClick={() => setActiveView("ai-galaxy")}
+                    className={`flex items-center gap-1 ml-4 cursor-pointer hover:text-matrix-green transition-colors ${activeView === "xp-galaxy" ? "text-matrix-green shadow-[0_0_5px_rgba(0,255,65,0.3)]" : "opacity-60"}`}
+                    onClick={() => setActiveView("xp-galaxy")}
                   >
                     <span>📄</span> Technical XP
                   </div>
@@ -299,7 +299,7 @@ export default function Home() {
                   </div>
                 </div>
               </div>
-            ) : activeView === "ai-galaxy" ? (
+            ) : activeView === "xp-galaxy" ? (
               <div className="h-full relative border border-matrix-green/10 rounded overflow-hidden bg-transparent">
                 <AIGalaxyView
                   onNodeClick={(name) => {
