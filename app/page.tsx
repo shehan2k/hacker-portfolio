@@ -10,12 +10,13 @@ import AIGalaxyView from "@/components/aigalaxy";
 import LoadingScreen from "@/components/loadingscreen";
 
 export default function Home() {
+  
   const certificateDetails: Record<string, { title: string; uni: string; issued: string; link: string }> = {
-    "/CERT1.png": { title: "Advanced Learning Algorithms", uni: "STANFORD / DEEPLEARNINGAI", issued: "2023", link: "https://www.coursera.org/account/accomplishments/verify/F8PFCNW7AF79" },
-    "/CERT 2.png": { title: "Supervised Machine Learning", uni: "STANFORD / DEEPLEARNINGAI", issued: "2023", link: "https://www.coursera.org/account/accomplishments/verify/XPLEP85DGNNU" },
-    "/CERT 3.png": { title: "Unsupervised Machine Learning", uni: "STANFORD / DEEPLEARNINGAI", issued: "2024", link: "https://www.coursera.org/account/accomplishments/verify/61SNZ4IM2V3S" },
-    "/CERT 4.png": { title: "Machine Learning", uni: "STANFORD / DEEPLEARNINGAI", issued: "2022", link: "https://www.coursera.org/account/accomplishments/specialization/44GDQWUEBNDH" },
-    "/CERT 5.png": { title: "Oracle AI Foundations Associate", uni: "ORACLE", issued: "2023", link: "https://catalog-education.oracle.com/ords/certview/sharebadge?id=2CD00FBCCDE656AEA1670C487E0B6B02B229BE03A6DBA0E9B66FD55B0A5C763F" },
+    "/CERT1.png": { title: "Advanced Learning Algorithms", uni: "STANFORD / DEEPLEARNINGAI", issued: "2025", link: "https://www.coursera.org/account/accomplishments/verify/F8PFCNW7AF79" },
+    "/CERT 2.png": { title: "Supervised Machine Learning", uni: "STANFORD / DEEPLEARNINGAI", issued: "2025", link: "https://www.coursera.org/account/accomplishments/verify/XPLEP85DGNNU" },
+    "/CERT 3.png": { title: "Unsupervised Machine Learning", uni: "STANFORD / DEEPLEARNINGAI", issued: "2025", link: "https://www.coursera.org/account/accomplishments/verify/61SNZ4IM2V3S" },
+    "/CERT 4.png": { title: "Machine Learning", uni: "STANFORD / DEEPLEARNINGAI", issued: "2025", link: "https://www.coursera.org/account/accomplishments/specialization/44GDQWUEBNDH" },
+    "/CERT 5.png": { title: "Oracle AI Foundations Associate", uni: "ORACLE", issued: "2025", link: "https://catalog-education.oracle.com/ords/certview/sharebadge?id=2CD00FBCCDE656AEA1670C487E0B6B02B229BE03A6DBA0E9B66FD55B0A5C763F" },
   };
 
   const [isLoading, setIsLoading] = useState(true);
@@ -302,7 +303,7 @@ export default function Home() {
               <div className="h-full relative border border-matrix-green/10 rounded overflow-hidden bg-transparent">
                 <AIGalaxyView
                   onNodeClick={(name) => {
-                    setShowGlobe(true);
+                    setShowGlobe(!!name);
                     setSelectedSubsystem(name);
                   }}
                 />
@@ -326,7 +327,9 @@ export default function Home() {
                 ? "Certificate_View"
                 : showGlobe
                   ? "Subsystem_Analysis"
-                  : "User_Profile"
+                  : (activeView === "about" || activeView === "education" || activeView === "work")
+                    ? "User_Profile"
+                    : "System_Status" // Default for other views like "ai-galaxy" when no globe is shown
             }
             className="col-span-3 h-screen"
           >
@@ -362,7 +365,7 @@ export default function Home() {
                   </div>
                 </div>
                 <div className="mt-12 p-2 bg-matrix-green/10 border-l-2 border-matrix-green text-[10px] leading-relaxed italic">
-                  Verified by node authority. Identity hash confirmed.
+                  Verified by the Council Authority. Identity hash confirmed.
                 </div>
               </div>
             ) : showGlobe ? (
@@ -378,15 +381,10 @@ export default function Home() {
                     Deep-diving into specific expertise nodes. Visualizing neural
                     architecture.
                   </p>
-                  <button
-                    onClick={() => setShowGlobe(false)}
-                    className="text-matrix-green hover:glow-sm"
-                  >
-                    [CLOSE_STREAM]
-                  </button>
+                  
                 </div>
               </div>
-            ) : openFolders.bio ? (
+            ) : (activeView === "about" || activeView === "education" || activeView === "work") ? (
               <div className="flex flex-col items-center gap-8 p-6 pt-12">
                 {/* Profile Picture Frame */}
                 <div className="relative w-40 h-40 border-2 border-matrix-green/30 p-1 bg-black/50">

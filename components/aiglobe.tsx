@@ -153,7 +153,9 @@ function Globe({ nodes }: { nodes: { name: string; position: [number, number, nu
 }
 
 export default function AIGlobe({ subsystem }: { subsystem?: string | null }) {
-  const nodes = subsystem && subsystemData[subsystem] ? subsystemData[subsystem] : subsystemData["DEFAULT"];
+  if (!subsystem) return null;
+
+  const nodes = (subsystem && subsystemData[subsystem]) || [];
 
   return (
     <div className="h-full w-full">

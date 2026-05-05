@@ -20,8 +20,9 @@ const skillClusters = [
   { name: "Administrative_and_Productivity", position: [-1.2, -0.8, -1.5] },
 ];
 
-function PlanetNode({ name, position, onClick }: { name: string; position: [number, number, number]; onClick?: () => void }) {
+function PlanetNode({ name, position, onClick, isSelected }: { name: string; position: [number, number, number]; onClick?: () => void; isSelected: boolean }) {
   const meshRef = useRef<THREE.Mesh>(null!);
+  const materialRef = useRef<THREE.MeshStandardMaterial>(null!);
   const [hovered, setHover] = useState(false);
 
   useEffect(() => {
@@ -32,6 +33,21 @@ function PlanetNode({ name, position, onClick }: { name: string; position: [numb
     }
   }, [hovered]);
 
+  // Handle the blinking animation for selected nodes
+  useFrame(({ clock }) => {
+    if (isSelected && materialRef.current) {
+      const t = clock.getElapsedTime();
+      materialRef.current.emissiveIntensity = 0.75 + Math.sin(t * 8) * 0.75;
+    }
+  });
+
+  // Explicitly reset intensity when the node is deselected
+  useEffect(() => {
+    if (!isSelected && materialRef.current) {
+      materialRef.current.emissiveIntensity = 0.9;
+    }
+  }, [isSelected]);
+
   return (
     <group position={position} onClick={(e) => { e.stopPropagation(); onClick?.(); }}>
       <mesh 
@@ -41,13 +57,13 @@ function PlanetNode({ name, position, onClick }: { name: string; position: [numb
       >
         <sphereGeometry args={[hovered ? 0.4 : 0.3, 16, 16]} />
         <meshStandardMaterial 
+          ref={materialRef}
           color={hovered ? "#d0c7c7" : "#d08344"} 
           wireframe={false} 
           emissive="#cb9527" 
           transparent
           opacity={0.8}
-          
-          emissiveIntensity={hovered ? 0.9 : 0.9} 
+          emissiveIntensity={0.9} 
         />
       </mesh>
       <Html distanceFactor={15}>
@@ -59,7 +75,7 @@ function PlanetNode({ name, position, onClick }: { name: string; position: [numb
   );
 }
 
-function GalaxySystem({ onNodeClick }: { onNodeClick?: (name: string) => void }) {
+function GalaxySystem({ onNodeClick, selectedNode }: { onNodeClick?: (name: string | null) => void; selectedNode: string | null }) {
   const groupRef = useRef<THREE.Group>(null!);
   
   // Rotate everything together
@@ -109,18 +125,39 @@ function GalaxySystem({ onNodeClick }: { onNodeClick?: (name: string) => void })
         <PointMaterial transparent color="#dcbd23" size={0.03} sizeAttenuation depthWrite={false} blending={THREE.AdditiveBlending} />
       </Points>
       {skillClusters.map((node, index) => (
-        <PlanetNode key={index} name={node.name} position={node.position as [number, number, number]} onClick={() => onNodeClick?.(node.name)} />
+        <PlanetNode 
+          key={index} 
+          name={node.name} 
+          position={node.position as [number, number, number]} 
+          onClick={() => onNodeClick?.(node.name)}
+          isSelected={selectedNode === node.name}
+        />
       ))}
     </group>
   );
 }
 
-export default function AIGalaxyView({ onNodeClick }: { onNodeClick?: (name: string) => void }) {
+export default function AIGalaxyView({ onNodeClick, selectedNode: externalSelectedNode }: { onNodeClick?: (name: string | null) => void; selectedNode?: string | null }) {
+  const [internalSelectedNode, setInternalSelectedNode] = useState<string | null>(null);
+  const activeNode = externalSelectedNode !== undefined ? externalSelectedNode : internalSelectedNode;
+
+  // Keep internal state in sync with external prop changes
+  useEffect(() => {
+    if (externalSelectedNode !== undefined) {
+      setInternalSelectedNode(externalSelectedNode);
+    }
+  }, [externalSelectedNode]);
+
+  const handleNodeClick = (name: string | null) => {
+    setInternalSelectedNode(name);
+    onNodeClick?.(name);
+  };
+
   return (
     <div className="h-full w-full bg-[radial-gradient(circle_at_center,_#1e1b4b_0%,_#020617_60%,_#000000_100%)]">
-      <Canvas camera={{ position: [0, 4, 8], fov: 45 }}>
+      <Canvas camera={{ position: [0, 4, 8], fov: 45 }} onPointerMissed={() => handleNodeClick(null)}>
         <ambientLight intensity={0.5} />
-        <GalaxySystem onNodeClick={onNodeClick} />
+        <GalaxySystem onNodeClick={handleNodeClick} selectedNode={activeNode} />
         <OrbitControls enableZoom={true} />
       </Canvas>
     </div>
