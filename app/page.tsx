@@ -10,18 +10,83 @@ import AIGalaxyView from "@/components/aigalaxy";
 import LoadingScreen from "@/components/loadingscreen";
 
 export default function Home() {
-  
-  const certificateDetails: Record<string, { title: string; uni: string; issued: string; link: string }> = {
-    "/CERT1.png": { title: "Advanced Learning Algorithms", uni: "STANFORD / DEEPLEARNINGAI", issued: "2025", link: "https://www.coursera.org/account/accomplishments/verify/F8PFCNW7AF79" },
-    "/CERT 2.png": { title: "Supervised Machine Learning", uni: "STANFORD / DEEPLEARNINGAI", issued: "2025", link: "https://www.coursera.org/account/accomplishments/verify/XPLEP85DGNNU" },
-    "/CERT 3.png": { title: "Unsupervised Machine Learning", uni: "STANFORD / DEEPLEARNINGAI", issued: "2025", link: "https://www.coursera.org/account/accomplishments/verify/61SNZ4IM2V3S" },
-    "/CERT 4.png": { title: "Machine Learning", uni: "STANFORD / DEEPLEARNINGAI", issued: "2025", link: "https://www.coursera.org/account/accomplishments/specialization/44GDQWUEBNDH" },
-    "/CERT 5.png": { title: "Oracle AI Foundations Associate", uni: "ORACLE", issued: "2025", link: "https://catalog-education.oracle.com/ords/certview/sharebadge?id=2CD00FBCCDE656AEA1670C487E0B6B02B229BE03A6DBA0E9B66FD55B0A5C763F" },
+  const certificateDetails: Record<
+    string,
+    { title: string; uni: string; issued: string; link: string }
+  > = {
+    "/CERT1.png": {
+      title: "Advanced Learning Algorithms",
+      uni: "STANFORD / DEEPLEARNINGAI",
+      issued: "2025",
+      link: "https://www.coursera.org/account/accomplishments/verify/F8PFCNW7AF79",
+    },
+    "/CERT 2.png": {
+      title: "Supervised Machine Learning",
+      uni: "STANFORD / DEEPLEARNINGAI",
+      issued: "2025",
+      link: "https://www.coursera.org/account/accomplishments/verify/XPLEP85DGNNU",
+    },
+    "/CERT 3.png": {
+      title: "Unsupervised Machine Learning",
+      uni: "STANFORD / DEEPLEARNINGAI",
+      issued: "2025",
+      link: "https://www.coursera.org/account/accomplishments/verify/61SNZ4IM2V3S",
+    },
+    "/CERT 4.png": {
+      title: "Machine Learning",
+      uni: "STANFORD / DEEPLEARNINGAI",
+      issued: "2025",
+      link: "https://www.coursera.org/account/accomplishments/specialization/44GDQWUEBNDH",
+    },
+    "/CERT 5.png": {
+      title: "Oracle AI Foundations Associate",
+      uni: "ORACLE",
+      issued: "2025",
+      link: "https://catalog-education.oracle.com/ords/certview/sharebadge?id=2CD00FBCCDE656AEA1670C487E0B6B02B229BE03A6DBA0E9B66FD55B0A5C763F",
+    },
+  };
+
+  const projectsData: Record<
+    string,
+    { title: string; images: [string, string]; description: string }
+  > = {
+    "project-1": {
+      title: "NEURO_SYMBOLIC_AI_MATH_SOLVER",
+      images: ["/performance.png", "/graph.png"],
+      description:
+        "Designed and implemented a Neuro-Symbolic AI Math Solver using Python, combining a Llama 3.2:1B model for natural language processing and Sympy for symbolic mathematics to solve complex mathematical problems. It uses the speed and efficiency of the 1B parameter model to interpret and process Natural Language, while leveraging Sympy's powerful symbolic computation capabilities to provide accurate solutions."
+      },
+    "project-2": {
+      title: "APPAREL_MARKETPLACE",
+      images: ["/app1.png", "/app2.png"],
+      description:
+        "Authored a comprehensive business case and designed high-fidelity Figma prototypes to define user journeys and stakeholders' requirements.\n\nArchitected a cross-platform marketplace using React Native (Expo) and TypeScript, integrating Firebase for streamlined authentication and account management. \n\nEngineered a dual-role user system using Firestore (NoSQL) to manage permissions and secure data access for both vendors and customers. Enhanced security by implementing biometric authentication (FaceID/Fingerprint) utilizing Expo’s native modules. \n\nDeveloped comprehensive vendor management features, including real-time product inventory updates and account information updates.",
+    },
+    "project-3": {
+      title: "MOCK_ATM_SYSTEM",
+      images: ["/ATM1.png", "/ATM2.png"],
+      description:
+        "Developed a mock ATM system using Java, simulating core banking functionalities like Authentication, Deposit, Withdrawal, Account balance inquiry etc .",
+    },
+    "project-4": {
+      title: "MEDICAL_EXPERT_SYSTEM",
+      images: ["/MED1.png", "/MED2.png"],
+      description:
+        "Developed a Medical Expert System using PROLOG, simulating a diagnostic system for common medical conditions via a given number of symptoms. Uses a Knowledge Base and Predicates to Infer and provide possible diagnoses based on user input."
+      },
+    "project-5": {
+      title: "GPS_NAVIGATION_SYSTEM",
+      images: ["/map.png", "/map2.png"],
+      description:
+        "Developed a GPS Navigation System using PROLOG, that provides the best possible route from one point to another based on reward functions. This inferrence is done by analyzing various attributes such as Distance, Vehicle Type, Weather, Traffic etc."},
   };
 
   const [isLoading, setIsLoading] = useState(true);
   const [activeView, setActiveView] = useState("about");
-  const [selectedCertificate, setSelectedCertificate] = useState<string | null>(null);
+  const [selectedCertificate, setSelectedCertificate] = useState<string | null>(
+    null,
+  );
+  const [currentProjectImageIdx, setCurrentProjectImageIdx] = useState(0);
   const [selectedSubsystem, setSelectedSubsystem] = useState<string | null>(
     null,
   );
@@ -37,7 +102,8 @@ export default function Home() {
   const toggleFolder = (folder: keyof typeof openFolders) => {
     setOpenFolders((prev) => {
       const isOpening = !prev[folder];
-      if (folder === "certifications" && isOpening) setSelectedCertificate(null);
+      if (folder === "certifications" && isOpening)
+        setSelectedCertificate(null);
       if (folder === "bio" && isOpening) setShowGlobe(false);
       return { ...prev, [folder]: isOpening };
     });
@@ -51,7 +117,11 @@ export default function Home() {
         <motion.main
           key="main"
           initial={{ opacity: 0, x: -20, skewX: -10 }}
-          animate={{ opacity: [0, 1, 0.5, 1], x: [20, -10, 5, 0], skewX: [10, -5, 0] }}
+          animate={{
+            opacity: [0, 1, 0.5, 1],
+            x: [20, -10, 5, 0],
+            skewX: [10, -5, 0],
+          }}
           transition={{ duration: 0.4, ease: "easeInOut" }}
           className="min-h-screen p-4 grid grid-cols-12 gap-4"
         >
@@ -109,26 +179,10 @@ export default function Home() {
 
               <div
                 className="flex items-center gap-1 text-matrix-green/80 cursor-pointer hover:text-matrix-green transition-colors"
-                onClick={() => toggleFolder("config")}
-              >
-                <span>{openFolders.config ? "📂" : "📁"}</span> config
-              </div>
-              {openFolders.config && (
-                <>
-                  <div className="flex items-center gap-1 ml-4 opacity-60">
-                    <span>📄</span> user.cfg
-                  </div>
-                  <div className="flex items-center gap-1 ml-4 opacity-60">
-                    <span>📄</span> net.key
-                  </div>
-                </>
-              )}
-
-              <div
-                className="flex items-center gap-1 text-matrix-green/80 cursor-pointer hover:text-matrix-green transition-colors"
                 onClick={() => toggleFolder("certifications")}
               >
-                <span>{openFolders.certifications ? "📂" : "📁"}</span> Certifications
+                <span>{openFolders.certifications ? "📂" : "📁"}</span>{" "}
+                Certifications
               </div>
               {openFolders.certifications && (
                 <>
@@ -179,6 +233,71 @@ export default function Home() {
                   </div>
                 </>
               )}
+              <div
+                className="flex items-center gap-1 text-matrix-green/80 cursor-pointer hover:text-matrix-green transition-colors"
+                onClick={() => toggleFolder("config")}
+              >
+                <span>{openFolders.config ? "📂" : "📁"}</span> PROJECTS
+              </div>
+              {openFolders.config && (
+                <>
+                  <div
+                    className={`flex items-center gap-1 ml-4 cursor-pointer hover:text-matrix-green transition-colors ${activeView === "project-1" ? "text-matrix-green" : "opacity-60"}`}
+                    onClick={() => {
+                      setActiveView("project-1");
+                      setSelectedCertificate(null);
+                      setShowGlobe(false);
+                      setCurrentProjectImageIdx(0);
+                    }}
+                  >
+                    <span>📄</span> Neuro Symbolic AI Math Solver
+                  </div>
+                  <div
+                    className={`flex items-center gap-1 ml-4 cursor-pointer hover:text-matrix-green transition-colors ${activeView === "project-2" ? "text-matrix-green" : "opacity-60"}`}
+                    onClick={() => {
+                      setActiveView("project-2");
+                      setSelectedCertificate(null);
+                      setShowGlobe(false);
+                      setCurrentProjectImageIdx(0);
+                    }}
+                  >
+                    <span>📄</span> Apparel Marketplace
+                  </div>
+                  <div
+                    className={`flex items-center gap-1 ml-4 cursor-pointer hover:text-matrix-green transition-colors ${activeView === "project-3" ? "text-matrix-green" : "opacity-60"}`}
+                    onClick={() => {
+                      setActiveView("project-3");
+                      setSelectedCertificate(null);
+                      setShowGlobe(false);
+                      setCurrentProjectImageIdx(0);
+                    }}
+                  >
+                    <span>📄</span> Mock ATM System
+                  </div>
+                  <div
+                    className={`flex items-center gap-1 ml-4 cursor-pointer hover:text-matrix-green transition-colors ${activeView === "project-4" ? "text-matrix-green" : "opacity-60"}`}
+                    onClick={() => {
+                      setActiveView("project-4");
+                      setSelectedCertificate(null);
+                      setShowGlobe(false);
+                      setCurrentProjectImageIdx(0);
+                    }}
+                  >
+                    <span>📄</span> Medical Expert System
+                  </div>
+                  <div
+                    className={`flex items-center gap-1 ml-4 cursor-pointer hover:text-matrix-green transition-colors ${activeView === "project-5" ? "text-matrix-green" : "opacity-60"}`}
+                    onClick={() => {
+                      setActiveView("project-5");
+                      setSelectedCertificate(null);
+                      setShowGlobe(false);
+                      setCurrentProjectImageIdx(0);
+                    }}
+                  >
+                    <span>📄</span> GPS Navigation System
+                  </div>
+                </>
+              )}
 
               <p className="mt-4 border-t border-matrix-green/20 pt-2 opacity-50">
                 Initializing... [OK]
@@ -189,26 +308,29 @@ export default function Home() {
           {/* Main Content (The "Profile") */}
           <Panel
             title={
-              selectedCertificate 
+              selectedCertificate
                 ? "DATA_VISUALIZATION"
-                : activeView === "about"
-                ? "System_User"
-                : activeView.toUpperCase().replace("-", "_")
+                : projectsData[activeView]
+                  ? "PROJECT_DETAILS"
+                  : activeView === "about"
+                    ? "System_User"
+                    : activeView.toUpperCase().replace("-", "_")
             }
             className="col-span-7 h-screen"
           >
             {selectedCertificate ? (
               <div className="h-full flex flex-col items-center justify-center p-4">
-                <div className="relative w-full flex-1 min-h-0">
+                <div className="relative w-full flex-1 min-h-[300px]">
                   <Image
                     src={selectedCertificate}
                     alt="Certificate"
                     fill
+                    sizes="(max-width: 1024px) 100vw, 60vw"
                     className="object-contain rounded-lg border border-matrix-green/30"
                   />
                 </div>
-                <button 
-                  onClick={() => setSelectedCertificate(null)} 
+                <button
+                  onClick={() => setSelectedCertificate(null)}
                   className="mt-6 text-matrix-green hover:text-white border border-matrix-green/40 px-4 py-1 hover:bg-matrix-green/20 transition-all font-mono text-xs"
                 >
                   [EXIT_VIEWER]
@@ -254,24 +376,26 @@ export default function Home() {
                 </div>
               </div>
             ) : activeView === "work" ? (
-              <div className="space-y-6 overflow-y-auto h-full pr-4 pb-12 scrollbar-thin scrollbar-thumb-matrix-green/20">
+              <div className="space-y-6 pb-12">
                 <h1 className="text-3xl text-glow font-bold uppercase">
                   Work Experience
                 </h1>
                 <div className="space-y-6">
                   <div>
                     <h4 className="text-matrix-green font-bold">
-                      Data Entry Operator - Commercial Bank (2021 Apr - 2022 Nov)
+                      Data Entry Operator - Commercial Bank (2021 Apr - 2022
+                      Nov)
                     </h4>
                     <p className="text-xs opacity-80 mt-1">
-                      Contributed to operational efficiency by accurately updating
-                      databases and collaborating with the Nugegoda branch team.
+                      Contributed to operational efficiency by accurately
+                      updating databases and collaborating with the Nugegoda
+                      branch team.
                     </p>
                   </div>
                   <div>
                     <h4 className="text-matrix-green font-bold">
-                      Data Entry & Quality Specialist - AV Business Solutions (2022
-                      - 2024)
+                      Data Entry & Quality Specialist - AV Business Solutions
+                      (2022 - 2024)
                     </h4>
                     <p className="text-xs opacity-80 mt-1">
                       Handled payment updates, resolved customer inquiries, and
@@ -284,8 +408,8 @@ export default function Home() {
                       2025)
                     </h4>
                     <p className="text-xs opacity-80 mt-1">
-                      Supervised a QC team and assisted in the development of new
-                      customer care agents.
+                      Supervised a QC team and assisted in the development of
+                      new customer care agents.
                     </p>
                   </div>
                   <div>
@@ -297,6 +421,38 @@ export default function Home() {
                       troubleshooting within the company.
                     </p>
                   </div>
+                </div>
+              </div>
+            ) : projectsData[activeView] ? (
+              <div className="space-y-6 pb-12">
+                <h1 className="text-3xl text-glow font-bold uppercase tracking-tight">
+                  {projectsData[activeView].title}
+                </h1>
+
+                <div className="flex items-center gap-4 h-[400px]">
+                  <button 
+                    onClick={() => setCurrentProjectImageIdx(prev => (prev === 0 ? projectsData[activeView].images.length - 1 : prev - 1))}
+                    className="text-matrix-green hover:text-white p-2 border border-matrix-green/20 bg-black/40 hover:bg-matrix-green/20 transition-all font-mono"
+                  >
+                    &lt;
+                  </button>
+                  
+                  <div className="relative flex-1 h-full border border-matrix-green/30 bg-black/50 overflow-hidden rounded">
+                    <Image
+                      src={projectsData[activeView].images[currentProjectImageIdx]}
+                      alt={`Project Screenshot ${currentProjectImageIdx + 1}`}
+                      fill
+                      sizes="(max-width: 1024px) 100vw, 50vw"
+                      className="object-contain"
+                    />
+                  </div>
+
+                  <button 
+                    onClick={() => setCurrentProjectImageIdx(prev => (prev === projectsData[activeView].images.length - 1 ? 0 : prev + 1))}
+                    className="text-matrix-green hover:text-white p-2 border border-matrix-green/20 bg-black/40 hover:bg-matrix-green/20 transition-all font-mono"
+                  >
+                    &gt;
+                  </button>
                 </div>
               </div>
             ) : activeView === "xp-galaxy" ? (
@@ -327,37 +483,57 @@ export default function Home() {
                 ? "Certificate_View"
                 : showGlobe
                   ? "Subsystem_Analysis"
-                  : (activeView === "about" || activeView === "education" || activeView === "work")
-                    ? "User_Profile"
-                    : "System_Status" // Default for other views like "ai-galaxy" when no globe is shown
+                  : projectsData[activeView]
+                    ? "Project_Brief"
+                    : activeView === "about" ||
+                        activeView === "education" ||
+                        activeView === "work"
+                      ? "User_Profile"
+                      : "System_Status" // Default for other views like "ai-galaxy" when no globe is shown
             }
             className="col-span-3 h-screen"
           >
             {selectedCertificate ? (
               <div className="p-4 space-y-6 font-mono">
                 <div className="border-b border-matrix-green/30 pb-2">
-                  <p className="text-[10px] text-matrix-green/50 mb-1">FILE_NAME</p>
-                  <p className="text-xs uppercase">{selectedCertificate.split('/').pop()}</p>
+                  <p className="text-[10px] text-matrix-green/50 mb-1">
+                    FILE_NAME
+                  </p>
+                  <p className="text-xs uppercase">
+                    {selectedCertificate.split("/").pop()}
+                  </p>
                 </div>
                 <div className="space-y-4">
                   <div>
-                    <p className="text-[10px] text-matrix-green/50">CERTIFICATION_TITLE</p>
-                    <p className="text-matrix-green font-bold uppercase">{certificateDetails[selectedCertificate]?.title}</p>
+                    <p className="text-[10px] text-matrix-green/50">
+                      CERTIFICATION_TITLE
+                    </p>
+                    <p className="text-matrix-green font-bold uppercase">
+                      {certificateDetails[selectedCertificate]?.title}
+                    </p>
                   </div>
                   <div>
-                    <p className="text-[10px] text-matrix-green/50">UNIVERSITY</p>
-                    <p className="text-sm opacity-80">{certificateDetails[selectedCertificate]?.uni}</p>
+                    <p className="text-[10px] text-matrix-green/50">
+                      UNIVERSITY
+                    </p>
+                    <p className="text-sm opacity-80">
+                      {certificateDetails[selectedCertificate]?.uni}
+                    </p>
                   </div>
                   <div>
-                    <p className="text-[10px] text-matrix-green/50">DATE_ISSUED</p>
-                    <p className="text-sm opacity-80">{certificateDetails[selectedCertificate]?.issued}</p>
+                    <p className="text-[10px] text-matrix-green/50">
+                      DATE_ISSUED
+                    </p>
+                    <p className="text-sm opacity-80">
+                      {certificateDetails[selectedCertificate]?.issued}
+                    </p>
                   </div>
                   <div>
                     <p className="text-[10px] text-matrix-green/50">LINK</p>
-                    <a 
-                      href={certificateDetails[selectedCertificate]?.link} 
-                      target="_blank" 
-                      rel="noopener noreferrer" 
+                    <a
+                      href={certificateDetails[selectedCertificate]?.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="text-[#00f2ff] visited:text-[#00f2ff] hover:underline"
                     >
                       [VIEW_CREDENTIAL]
@@ -378,13 +554,31 @@ export default function Home() {
                     NODE_STREAMS_ACTIVE: {selectedSubsystem}
                   </p>
                   <p className="mb-2">
-                    Deep-diving into specific expertise nodes. Visualizing neural
-                    architecture.
+                    Deep-diving into specific expertise nodes. Visualizing
+                    neural architecture.
                   </p>
-                  
                 </div>
               </div>
-            ) : (activeView === "about" || activeView === "education" || activeView === "work") ? (
+            ) : projectsData[activeView] ? (
+              <div className="p-4 space-y-6 font-mono">
+                <div className="border-b border-matrix-green/30 pb-2">
+                  <p className="text-[10px] text-matrix-green/50 mb-1">
+                    DATA_ENTRY_NODE
+                  </p>
+                  <p className="text-xs uppercase">DOCUMENTATION_LOG</p>
+                </div>
+                <div className="space-y-4">
+                  <p className="font-sans text-base leading-relaxed opacity-90 text-justify whitespace-pre-line px-1">
+                    {projectsData[activeView].description}
+                  </p>
+                </div>
+                <div className="mt-12 p-2 bg-matrix-green/10 border-l-2 border-matrix-green text-[10px] leading-relaxed italic">
+                  Project metadata successfully decoded. Analysis complete.
+                </div>
+              </div>
+            ) : activeView === "about" ||
+              activeView === "education" ||
+              activeView === "work" ? (
               <div className="flex flex-col items-center gap-8 p-6 pt-12">
                 {/* Profile Picture Frame */}
                 <div className="relative w-40 h-40 border-2 border-matrix-green/30 p-1 bg-black/50">
@@ -401,7 +595,7 @@ export default function Home() {
                       sizes="160px"
                       height={200}
                       width={200}
-                      className="object-cover opacity-80"
+                      className="object-cover"
                     />
                     <div className="absolute inset-0 bg-[linear-gradient(rgba(0,255,65,0.05)_50%,transparent_50%)] bg-[length:100%_4px] pointer-events-none" />
                   </div>

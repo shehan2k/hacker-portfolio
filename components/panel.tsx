@@ -10,7 +10,7 @@ export default function Panel({ children, title, className }: { children: React.
       </div>
       
       {/* Content */}
-      <div className="text-matrix-green font-mono flex-1 relative overflow-hidden">
+      <div className="text-matrix-green font-mono flex-1 relative overflow-y-auto scrollbar-thin scrollbar-thumb-matrix-green/20 pr-2">
         {children}
       </div>
     </div>
