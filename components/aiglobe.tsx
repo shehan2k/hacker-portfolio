@@ -1,11 +1,11 @@
 "use client";
 
-import React, { useRef } from "react";
+import React, { useRef, useMemo } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { OrbitControls, Sphere, Html } from "@react-three/drei";
+import { OrbitControls, Html, Points, PointMaterial } from "@react-three/drei";
 import * as THREE from "three";
 
-const subsystemData: Record<string, { name: string; position: [number, number, number] }[]> = {
+export const subsystemData: Record<string, { name: string; position: [number, number, number] }[]> = {
   Machine_Learning: [
     { name: "Logistic Regression", position: [1.90, 0.63, 0.00] },
     { name: "Classification", position: [-0.63, 1.79, 0.63] },
@@ -103,7 +103,7 @@ function GlobeNodes({ nodes }: { nodes: { name: string; position: [number, numbe
         const offsetPosition: [number, number, number] = [pos[0] * 1.15, pos[1] * 1.15, pos[2] * 1.15];
         return (
           <Html key={index} position={offsetPosition} center distanceFactor={10}>
-            <div className="bg-black/70 border border-matrix-green/50 px-2 py-0.5 rounded text-[8px] text-matrix-green whitespace-nowrap cursor-pointer hover:bg-matrix-green hover:text-black transition-colors font-mono tracking-tighter">
+            <div className="bg-black/80 border border-matrix-green/60 px-2 py-0.5 rounded text-[8px] text-matrix-green whitespace-nowrap cursor-pointer hover:bg-matrix-green hover:text-black transition-all duration-300 font-mono tracking-tighter shadow-[0_0_10px_rgba(0,255,65,0.3)] drop-shadow-[0_0_2px_rgba(0,255,65,0.5)]">
               {node.name}
             </div>
           </Html>
@@ -114,41 +114,89 @@ function GlobeNodes({ nodes }: { nodes: { name: string; position: [number, numbe
 }
 
 function Globe({ nodes }: { nodes: { name: string; position: [number, number, number] }[] }) {
-  const meshRef = useRef<THREE.Mesh>(null!);
+  const groupRef = useRef<THREE.Group>(null!);
+
+  // Generate vibrant particles for the globe
+  const { positions, colors } = useMemo(() => {
+    const count = 100000;
+    const positions = new Float32Array(count * 3);
+    const colors = new Float32Array(count * 3);
+    const oceanBase = new THREE.Color("#030c19"); // Deep Ocean Blue
+    const oceanDeep = new THREE.Color("#0a0725"); // Vibrant Earth Blue
+    const islandColor = new THREE.Color("#335e0f"); // Island Green
+
+    for (let i = 0; i < count; i++) {
+      const i3 = i * 3;
+      
+      // Distribute particles: 85% on the surface shell, 5% inside for volume glow
+      const isShell = Math.random() > 0.05;
+      const radius = isShell ? (1.98 + Math.random() * 0.04) : (Math.random() * 1.98);
+      
+      const theta = Math.acos(2 * Math.random() - 1);
+      const phi = Math.random() * Math.PI * 2;
+
+      positions[i3] = radius * Math.sin(theta) * Math.cos(phi);
+      positions[i3 + 1] = radius * Math.sin(theta) * Math.sin(phi);
+      positions[i3 + 2] = radius * Math.cos(theta);
+
+      // Determine land vs ocean using trig-based pseudo-noise
+      const noise = Math.sin(phi * 2.5) * Math.cos(theta * 2.5) + 
+                    Math.sin(phi * 5 + theta * 3) * 0.4;
+      
+      let mixedColor;
+      if (isShell && noise > 0.5) {
+        // Island particle
+        mixedColor = islandColor.clone().lerp(new THREE.Color("#154e31"), Math.random());
+      } else {
+        // Ocean particle
+        mixedColor = oceanBase.clone().lerp(oceanDeep, Math.random());
+      }
+
+      colors[i3] = mixedColor.r;
+      colors[i3 + 1] = mixedColor.g;
+      colors[i3 + 2] = mixedColor.b;
+    }
+    return { positions, colors };
+  }, []);
+
   useFrame((state, delta) => {
-    if (meshRef.current) {
-      meshRef.current.rotation.y += delta * 0.2;
+    if (groupRef.current) {
+      groupRef.current.rotation.y += delta * 0.15;
+      // Subtle floating wobble
+      groupRef.current.rotation.z = Math.sin(state.clock.elapsedTime * 0.5) * 0.05;
     }
   });
 
   return (
-    <mesh ref={meshRef}>
-      <Sphere args={[1, 32, 32]} scale={2.0}>
-        <meshStandardMaterial
-          color="#0adde8"
-          emissive="#09d4fd"
-          emissiveIntensity={0.1}
-          wireframe={true}
-          
+    <group ref={groupRef}>
+      <Points positions={positions} colors={colors} stride={3} frustumCulled={false}>
+        <PointMaterial
+          transparent
+          vertexColors
+          size={0.035}
+          sizeAttenuation
+          depthWrite={false}
+          blending={THREE.AdditiveBlending}
+          opacity={0.7}
         />
-      </Sphere>
+      </Points>
 
       {/* Digital Island Sections */}
       {islandPositions.map((pos, i) => (
         <mesh key={i} position={pos}>
-          <icosahedronGeometry args={[0.10, 1]} />
+          <icosahedronGeometry args={[0.08, 1]} />
           <meshStandardMaterial 
-            color="#00ff41" 
-            emissive="#00ff41" 
-            emissiveIntensity={0.5}
+            color="#ff0000" 
+            emissive="#ff0000" 
+            emissiveIntensity={2}
             transparent
-            opacity={0.8}
+            opacity={0.9}
           />
         </mesh>
       ))}
 
       <GlobeNodes nodes={nodes} />
-    </mesh>
+    </group>
   );
 }
 
@@ -162,7 +210,7 @@ export default function AIGlobe({ subsystem }: { subsystem?: string | null }) {
       <Canvas camera={{ position: [0, 0, 4] }}>
         <ambientLight intensity={0.8} />
         <Globe nodes={nodes} />
-        <OrbitControls enableZoom={false} autoRotate={false} />
+        <OrbitControls enableZoom={true} minDistance={2.5} maxDistance={8} autoRotate={false} />
       </Canvas>
     </div>
   );

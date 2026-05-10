@@ -1,13 +1,38 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import Panel from "@/components/panel";
 import AICoreChart from "@/components/aicorechart";
-import AIGlobe from "@/components/aiglobe";
+import AIGlobe, { subsystemData } from "@/components/aiglobe";
 import AIGalaxyView from "@/components/aigalaxy";
 import LoadingScreen from "@/components/loadingscreen";
+
+const Typewriter = ({ text, delay = 0, speed = 10 }: { text: string; delay?: number; speed?: number }) => {
+  const [displayText, setDisplayText] = useState("");
+
+  useEffect(() => {
+    let i = 0;
+    setDisplayText("");
+
+    const timeoutId = setTimeout(() => {
+      const intervalId = setInterval(() => {
+        if (i < text.length) {
+          setDisplayText(text.slice(0, i + 1));
+          i++;
+        } else {
+          clearInterval(intervalId);
+        }
+      }, speed);
+      return () => clearInterval(intervalId);
+    }, delay);
+
+    return () => clearTimeout(timeoutId);
+  }, [text, delay, speed]);
+
+  return <span>{displayText}</span>;
+};
 
 export default function Home() {
   const certificateDetails: Record<
@@ -16,31 +41,32 @@ export default function Home() {
   > = {
     "/CERT1.png": {
       title: "Advanced Learning Algorithms",
-      uni: "STANFORD / DEEPLEARNINGAI",
+      uni: "STANFORD UNIVERSITY / DEEPLEARNINGAI",
       issued: "2025",
       link: "https://www.coursera.org/account/accomplishments/verify/F8PFCNW7AF79",
     },
     "/CERT 2.png": {
-      title: "Supervised Machine Learning",
-      uni: "STANFORD / DEEPLEARNINGAI",
+      title: "Supervised Machine Learning : Regression and Classification",
+      uni: "STANFORD UNIVERSITY / DEEPLEARNINGAI",
       issued: "2025",
       link: "https://www.coursera.org/account/accomplishments/verify/XPLEP85DGNNU",
     },
     "/CERT 3.png": {
-      title: "Unsupervised Machine Learning",
-      uni: "STANFORD / DEEPLEARNINGAI",
+      title:
+        "Unsupervised Machine Learning, Recommenders, Reinforcement Learning",
+      uni: "STANFORD UNIVERSITY / DEEPLEARNINGAI",
       issued: "2025",
       link: "https://www.coursera.org/account/accomplishments/verify/61SNZ4IM2V3S",
     },
     "/CERT 4.png": {
       title: "Machine Learning",
-      uni: "STANFORD / DEEPLEARNINGAI",
+      uni: "STANFORD UNIVERSITY / DEEPLEARNINGAI",
       issued: "2025",
       link: "https://www.coursera.org/account/accomplishments/specialization/44GDQWUEBNDH",
     },
     "/CERT 5.png": {
-      title: "Oracle AI Foundations Associate",
-      uni: "ORACLE",
+      title: "Oracle Cloud Infrastructure Certified AI Foundations Associate",
+      uni: "ORACLE UNIVERSITY",
       issued: "2025",
       link: "https://catalog-education.oracle.com/ords/certview/sharebadge?id=2CD00FBCCDE656AEA1670C487E0B6B02B229BE03A6DBA0E9B66FD55B0A5C763F",
     },
@@ -54,8 +80,8 @@ export default function Home() {
       title: "NEURO_SYMBOLIC_AI_MATH_SOLVER",
       images: ["/performance.png", "/graph.png"],
       description:
-        "Designed and implemented a Neuro-Symbolic AI Math Solver using Python, combining a Llama 3.2:1B model for natural language processing and Sympy for symbolic mathematics to solve complex mathematical problems. It uses the speed and efficiency of the 1B parameter model to interpret and process Natural Language, while leveraging Sympy's powerful symbolic computation capabilities to provide accurate solutions."
-      },
+        "Designed and implemented a Neuro-Symbolic AI Math Solver using Python, combining a Llama 3.2:1B model for natural language processing and Sympy for symbolic mathematics to solve complex mathematical problems. It uses the speed and efficiency of the 1B parameter model to interpret and process Natural Language, while leveraging Sympy's powerful symbolic computation capabilities to provide accurate solutions.",
+    },
     "project-2": {
       title: "APPAREL_MARKETPLACE",
       images: ["/app1.png", "/app2.png"],
@@ -72,20 +98,18 @@ export default function Home() {
       title: "MEDICAL_EXPERT_SYSTEM",
       images: ["/MED1.png", "/MED2.png"],
       description:
-        "Developed a Medical Expert System using PROLOG, simulating a diagnostic system for common medical conditions via a given number of symptoms. Uses a Knowledge Base and Predicates to Infer and provide possible diagnoses based on user input."
-      },
+        "Developed a Medical Expert System using PROLOG, simulating a diagnostic system for common medical conditions via a given number of symptoms. Uses a Knowledge Base and Predicates to Infer and provide possible diagnoses based on user input.",
+    },
     "project-5": {
       title: "GPS_NAVIGATION_SYSTEM",
       images: ["/map.png", "/map2.png"],
       description:
-        "Developed a GPS Navigation System using PROLOG, that provides the best possible route from one point to another based on reward functions. This inferrence is done by analyzing various attributes such as Distance, Vehicle Type, Weather, Traffic etc."},
+        "Developed a GPS Navigation System using PROLOG, that provides the best possible route from one point to another based on reward functions. This inferrence is done by analyzing various attributes such as Distance, Vehicle Type, Weather, Traffic etc.",
+    },
   };
 
   const [isLoading, setIsLoading] = useState(true);
   const [activeView, setActiveView] = useState("about");
-  const [selectedCertificate, setSelectedCertificate] = useState<string | null>(
-    null,
-  );
   const [currentProjectImageIdx, setCurrentProjectImageIdx] = useState(0);
   const [selectedSubsystem, setSelectedSubsystem] = useState<string | null>(
     null,
@@ -102,8 +126,6 @@ export default function Home() {
   const toggleFolder = (folder: keyof typeof openFolders) => {
     setOpenFolders((prev) => {
       const isOpening = !prev[folder];
-      if (folder === "certifications" && isOpening)
-        setSelectedCertificate(null);
       if (folder === "bio" && isOpening) setShowGlobe(false);
       return { ...prev, [folder]: isOpening };
     });
@@ -138,19 +160,28 @@ export default function Home() {
                 <>
                   <div
                     className={`flex items-center gap-1 ml-4 cursor-pointer hover:text-matrix-green transition-colors ${activeView === "about" ? "text-matrix-green" : "opacity-60"}`}
-                    onClick={() => setActiveView("about")}
+                    onClick={() => {
+                      setActiveView("about");
+                      setShowGlobe(false);
+                    }}
                   >
                     <span>📄</span> About
                   </div>
                   <div
                     className={`flex items-center gap-1 ml-4 cursor-pointer hover:text-matrix-green transition-colors ${activeView === "education" ? "text-matrix-green" : "opacity-60"}`}
-                    onClick={() => setActiveView("education")}
+                    onClick={() => {
+                      setActiveView("education");
+                      setShowGlobe(false);
+                    }}
                   >
                     <span>📄</span> Education
                   </div>
                   <div
                     className={`flex items-center gap-1 ml-4 cursor-pointer hover:text-matrix-green transition-colors ${activeView === "work" ? "text-matrix-green" : "opacity-60"}`}
-                    onClick={() => setActiveView("work")}
+                    onClick={() => {
+                      setActiveView("work");
+                      setShowGlobe(false);
+                    }}
                   >
                     <span>📄</span> Work
                   </div>
@@ -167,7 +198,10 @@ export default function Home() {
                 <>
                   <div
                     className={`flex items-center gap-1 ml-4 cursor-pointer hover:text-matrix-green transition-colors ${activeView === "xp-galaxy" ? "text-matrix-green shadow-[0_0_5px_rgba(0,255,65,0.3)]" : "opacity-60"}`}
-                    onClick={() => setActiveView("xp-galaxy")}
+                    onClick={() => {
+                      setActiveView("xp-galaxy");
+                      setShowGlobe(false);
+                    }}
                   >
                     <span>📄</span> Technical XP
                   </div>
@@ -187,45 +221,45 @@ export default function Home() {
               {openFolders.certifications && (
                 <>
                   <div
-                    className={`flex items-center gap-1 ml-4 cursor-pointer hover:text-matrix-green transition-colors ${selectedCertificate === "/CERT1.png" ? "text-matrix-green shadow-[0_0_5px_rgba(0,255,65,0.3)]" : "opacity-60"}`}
+                    className={`flex items-center gap-1 ml-4 cursor-pointer hover:text-matrix-green transition-colors ${activeView === "/CERT1.png" ? "text-matrix-green shadow-[0_0_5px_rgba(0,255,65,0.3)]" : "opacity-60"}`}
                     onClick={() => {
-                      setSelectedCertificate("/CERT1.png");
+                      setActiveView("/CERT1.png");
                       setShowGlobe(false);
                     }}
                   >
                     <span>📄</span> Advanced Learning Algorithms
                   </div>
                   <div
-                    className={`flex items-center gap-1 ml-4 cursor-pointer hover:text-matrix-green transition-colors ${selectedCertificate === "/CERT 2.png" ? "text-matrix-green shadow-[0_0_5px_rgba(0,255,65,0.3)]" : "opacity-60"}`}
+                    className={`flex items-center gap-1 ml-4 cursor-pointer hover:text-matrix-green transition-colors ${activeView === "/CERT 2.png" ? "text-matrix-green shadow-[0_0_5px_rgba(0,255,65,0.3)]" : "opacity-60"}`}
                     onClick={() => {
-                      setSelectedCertificate("/CERT 2.png");
+                      setActiveView("/CERT 2.png");
                       setShowGlobe(false);
                     }}
                   >
                     <span>📄</span> Supervised Machine Learning
                   </div>
                   <div
-                    className={`flex items-center gap-1 ml-4 cursor-pointer hover:text-matrix-green transition-colors ${selectedCertificate === "/CERT 3.png" ? "text-matrix-green shadow-[0_0_5px_rgba(0,255,65,0.3)]" : "opacity-60"}`}
+                    className={`flex items-center gap-1 ml-4 cursor-pointer hover:text-matrix-green transition-colors ${activeView === "/CERT 3.png" ? "text-matrix-green shadow-[0_0_5px_rgba(0,255,65,0.3)]" : "opacity-60"}`}
                     onClick={() => {
-                      setSelectedCertificate("/CERT 3.png");
+                      setActiveView("/CERT 3.png");
                       setShowGlobe(false);
                     }}
                   >
                     <span>📄</span> Unsupervised Machine Learning
                   </div>
                   <div
-                    className={`flex items-center gap-1 ml-4 cursor-pointer hover:text-matrix-green transition-colors ${selectedCertificate === "/CERT 4.png" ? "text-matrix-green shadow-[0_0_5px_rgba(0,255,65,0.3)]" : "opacity-60"}`}
+                    className={`flex items-center gap-1 ml-4 cursor-pointer hover:text-matrix-green transition-colors ${activeView === "/CERT 4.png" ? "text-matrix-green shadow-[0_0_5px_rgba(0,255,65,0.3)]" : "opacity-60"}`}
                     onClick={() => {
-                      setSelectedCertificate("/CERT 4.png");
+                      setActiveView("/CERT 4.png");
                       setShowGlobe(false);
                     }}
                   >
                     <span>📄</span> Machine Learning
                   </div>
                   <div
-                    className={`flex items-center gap-1 ml-4 cursor-pointer hover:text-matrix-green transition-colors ${selectedCertificate === "/CERT 5.png" ? "text-matrix-green shadow-[0_0_5px_rgba(0,255,65,0.3)]" : "opacity-60"}`}
+                    className={`flex items-center gap-1 ml-4 cursor-pointer hover:text-matrix-green transition-colors ${activeView === "/CERT 5.png" ? "text-matrix-green shadow-[0_0_5px_rgba(0,255,65,0.3)]" : "opacity-60"}`}
                     onClick={() => {
-                      setSelectedCertificate("/CERT 5.png");
+                      setActiveView("/CERT 5.png");
                       setShowGlobe(false);
                     }}
                   >
@@ -245,7 +279,6 @@ export default function Home() {
                     className={`flex items-center gap-1 ml-4 cursor-pointer hover:text-matrix-green transition-colors ${activeView === "project-1" ? "text-matrix-green" : "opacity-60"}`}
                     onClick={() => {
                       setActiveView("project-1");
-                      setSelectedCertificate(null);
                       setShowGlobe(false);
                       setCurrentProjectImageIdx(0);
                     }}
@@ -256,7 +289,6 @@ export default function Home() {
                     className={`flex items-center gap-1 ml-4 cursor-pointer hover:text-matrix-green transition-colors ${activeView === "project-2" ? "text-matrix-green" : "opacity-60"}`}
                     onClick={() => {
                       setActiveView("project-2");
-                      setSelectedCertificate(null);
                       setShowGlobe(false);
                       setCurrentProjectImageIdx(0);
                     }}
@@ -267,7 +299,6 @@ export default function Home() {
                     className={`flex items-center gap-1 ml-4 cursor-pointer hover:text-matrix-green transition-colors ${activeView === "project-3" ? "text-matrix-green" : "opacity-60"}`}
                     onClick={() => {
                       setActiveView("project-3");
-                      setSelectedCertificate(null);
                       setShowGlobe(false);
                       setCurrentProjectImageIdx(0);
                     }}
@@ -278,7 +309,6 @@ export default function Home() {
                     className={`flex items-center gap-1 ml-4 cursor-pointer hover:text-matrix-green transition-colors ${activeView === "project-4" ? "text-matrix-green" : "opacity-60"}`}
                     onClick={() => {
                       setActiveView("project-4");
-                      setSelectedCertificate(null);
                       setShowGlobe(false);
                       setCurrentProjectImageIdx(0);
                     }}
@@ -289,7 +319,6 @@ export default function Home() {
                     className={`flex items-center gap-1 ml-4 cursor-pointer hover:text-matrix-green transition-colors ${activeView === "project-5" ? "text-matrix-green" : "opacity-60"}`}
                     onClick={() => {
                       setActiveView("project-5");
-                      setSelectedCertificate(null);
                       setShowGlobe(false);
                       setCurrentProjectImageIdx(0);
                     }}
@@ -308,7 +337,7 @@ export default function Home() {
           {/* Main Content (The "Profile") */}
           <Panel
             title={
-              selectedCertificate
+              certificateDetails[activeView]
                 ? "DATA_VISUALIZATION"
                 : projectsData[activeView]
                   ? "PROJECT_DETAILS"
@@ -318,59 +347,58 @@ export default function Home() {
             }
             className="col-span-7 h-screen"
           >
-            {selectedCertificate ? (
+            {certificateDetails[activeView] ? (
               <div className="h-full flex flex-col items-center justify-center p-4">
                 <div className="relative w-full flex-1 min-h-[300px]">
                   <Image
-                    src={selectedCertificate}
+                    src={activeView}
                     alt="Certificate"
                     fill
                     sizes="(max-width: 1024px) 100vw, 60vw"
                     className="object-contain rounded-lg border border-matrix-green/30"
                   />
                 </div>
-                <button
-                  onClick={() => setSelectedCertificate(null)}
-                  className="mt-6 text-matrix-green hover:text-white border border-matrix-green/40 px-4 py-1 hover:bg-matrix-green/20 transition-all font-mono text-xs"
-                >
-                  [EXIT_VIEWER]
-                </button>
               </div>
             ) : activeView === "about" ? (
               <>
                 <h1 className="text-3xl text-glow font-bold uppercase">
-                  Shehan Uyanwatte
+                  <Typewriter text="Shehan Uyanwatte" />
                 </h1>
-                <p className="mt-4">BSc IT Undergraduate</p>
+                <p className="mt-4">
+                  <Typewriter text="BSc IT Undergraduate | The Open University of Sri Lanka" delay={300} />
+                </p>
+                <p className="mt-4">
+                  <Typewriter text="I'm a Proactive and results-driven student eager to contribute my skills and learn from industry experts. I'm actively seeking opportunities to gain hands-on experience and build professional connections" delay={800} />
+                </p>
               </>
             ) : activeView === "education" ? (
               <div className="space-y-6">
                 <h1 className="text-3xl text-glow font-bold uppercase">
-                  Education
+                  <Typewriter text="Education" />
                 </h1>
                 <div className="space-y-4">
                   <div>
                     <h4 className="text-matrix-green font-bold">
-                      St. Peter&apos;s College - Bambalapitiya (2006 - 2019)
+                      <Typewriter text="St. Peter's College - Bambalapitiya (2006 - 2019)" delay={300} />
                     </h4>
                     <p className="text-sm opacity-80 mt-1">
-                      O/L - 7A 2C | A/L - 2C 1W
+                      <Typewriter text="O/L - 7A 2C | A/L - 2C 1W" delay={800} />
                     </p>
                   </div>
                   <div>
                     <h4 className="text-matrix-green font-bold">
-                      The Open University of Sri Lanka (2021 - 2022)
+                      <Typewriter text="The Open University of Sri Lanka (2021 - 2022)" delay={1200} />
                     </h4>
                     <p className="text-sm opacity-80 mt-1">
-                      Adv. Certificate in Science
+                      <Typewriter text="Adv. Certificate in Science" delay={1700} />
                     </p>
                   </div>
                   <div>
                     <h4 className="text-matrix-green font-bold">
-                      The Open University of Sri Lanka (2023 - Present)
+                      <Typewriter text="The Open University of Sri Lanka (2023 - Present)" delay={2200} />
                     </h4>
                     <p className="text-sm opacity-80 mt-1">
-                      BSc Information Technology
+                      <Typewriter text="BSc Information Technology" delay={2700} />
                     </p>
                   </div>
                 </div>
@@ -378,47 +406,53 @@ export default function Home() {
             ) : activeView === "work" ? (
               <div className="space-y-6 pb-12">
                 <h1 className="text-3xl text-glow font-bold uppercase">
-                  Work Experience
+                  <Typewriter text="Work Experience" />
                 </h1>
                 <div className="space-y-6">
                   <div>
                     <h4 className="text-matrix-green font-bold">
-                      Data Entry Operator - Commercial Bank (2021 Apr - 2022
-                      Nov)
+                      <Typewriter text="Data Entry Operator - Commercial Bank (2021 Apr - 2022 Nov)" delay={300} />
                     </h4>
                     <p className="text-xs opacity-80 mt-1">
-                      Contributed to operational efficiency by accurately
-                      updating databases and collaborating with the Nugegoda
-                      branch team.
+                      <Typewriter text="- Contributed to the branch's operational efficiency by accurately updating data in various databases." delay={900} />
+                    </p>
+                    <p className="text-xs opacity-80 mt-1">
+                      <Typewriter text="- Collaborated with team members to ensure all data entry tasks were completed efficiently and on time." delay={1600} />
                     </p>
                   </div>
                   <div>
                     <h4 className="text-matrix-green font-bold">
-                      Data Entry & Quality Specialist - AV Business Solutions
-                      (2022 - 2024)
+                      <Typewriter text="Data Entry Operator - AV Business Solutions Pvt Ltd (2022 Nov - 2023 May)" delay={2400} />
                     </h4>
                     <p className="text-xs opacity-80 mt-1">
-                      Handled payment updates, resolved customer inquiries, and
-                      identifies training needs via interaction analysis.
+                      <Typewriter text="- Handled all aspects of customer payment updates, ensuring precision and professionalism in every transaction." delay={3200} />
+                    </p>
+                    <p className="text-xs opacity-80 mt-1">
+                      <Typewriter text="- Promoted to a role handling company-wide email inquiries from customers, demonstrating a strong ability to manage communication and resolve issues." delay={4000} />
                     </p>
                   </div>
                   <div>
                     <h4 className="text-matrix-green font-bold">
-                      Quality Control Supervisor - AV Business Solutions (2024 -
-                      2025)
+                      <Typewriter text="Quality Control Specialist - AV Business Solutions Pvt Ltd (2023 May - 2024 July)" delay={5200} />
                     </h4>
                     <p className="text-xs opacity-80 mt-1">
-                      Supervised a QC team and assisted in the development of
-                      new customer care agents.
+                      <Typewriter text="- Evaluated and analyzed customer care agent interactions to measure performance and identify training needs." delay={6000} />
                     </p>
                   </div>
                   <div>
                     <h4 className="text-matrix-green font-bold">
-                      IT Intern - AMW Capital Leasing (2026 Feb - Present)
+                      <Typewriter text="Quality Control Supervisor - AV Business Solutions (2024 - 2025)" delay={6800} />
                     </h4>
                     <p className="text-xs opacity-80 mt-1">
-                      Gaining experience in IT support, system maintenance, and
-                      troubleshooting within the company.
+                      <Typewriter text="- Supervised a four-member team on Quality Control tasks while also assisting in the training and development of new customer care agents." delay={7600} />
+                    </p>
+                  </div>
+                  <div>
+                    <h4 className="text-matrix-green font-bold">
+                      <Typewriter text="IT Intern - AMW Capital Leasing (2026 Feb - Present)" delay={8600} />
+                    </h4>
+                    <p className="text-xs opacity-80 mt-1">
+                      <Typewriter text="Currently working as an IT Intern at AMW Capital Leasing And Finance PLC, where I am gaining hands-on experience in IT support, system maintenance, and troubleshooting, while also contributing to various IT projects and initiatives within the company." delay={9400} />
                     </p>
                   </div>
                 </div>
@@ -426,20 +460,28 @@ export default function Home() {
             ) : projectsData[activeView] ? (
               <div className="space-y-6 pb-12">
                 <h1 className="text-3xl text-glow font-bold uppercase tracking-tight">
-                  {projectsData[activeView].title}
+                  <Typewriter text={projectsData[activeView].title} />
                 </h1>
 
                 <div className="flex items-center gap-4 h-[400px]">
-                  <button 
-                    onClick={() => setCurrentProjectImageIdx(prev => (prev === 0 ? projectsData[activeView].images.length - 1 : prev - 1))}
+                  <button
+                    onClick={() =>
+                      setCurrentProjectImageIdx((prev) =>
+                        prev === 0
+                          ? projectsData[activeView].images.length - 1
+                          : prev - 1,
+                      )
+                    }
                     className="text-matrix-green hover:text-white p-2 border border-matrix-green/20 bg-black/40 hover:bg-matrix-green/20 transition-all font-mono"
                   >
                     &lt;
                   </button>
-                  
+
                   <div className="relative flex-1 h-full border border-matrix-green/30 bg-black/50 overflow-hidden rounded">
                     <Image
-                      src={projectsData[activeView].images[currentProjectImageIdx]}
+                      src={
+                        projectsData[activeView].images[currentProjectImageIdx]
+                      }
                       alt={`Project Screenshot ${currentProjectImageIdx + 1}`}
                       fill
                       sizes="(max-width: 1024px) 100vw, 50vw"
@@ -447,8 +489,14 @@ export default function Home() {
                     />
                   </div>
 
-                  <button 
-                    onClick={() => setCurrentProjectImageIdx(prev => (prev === projectsData[activeView].images.length - 1 ? 0 : prev + 1))}
+                  <button
+                    onClick={() =>
+                      setCurrentProjectImageIdx((prev) =>
+                        prev === projectsData[activeView].images.length - 1
+                          ? 0
+                          : prev + 1,
+                      )
+                    }
                     className="text-matrix-green hover:text-white p-2 border border-matrix-green/20 bg-black/40 hover:bg-matrix-green/20 transition-all font-mono"
                   >
                     &gt;
@@ -479,7 +527,7 @@ export default function Home() {
           {/* Right Sidebar (Subsystem Details) */}
           <Panel
             title={
-              selectedCertificate
+              certificateDetails[activeView]
                 ? "Certificate_View"
                 : showGlobe
                   ? "Subsystem_Analysis"
@@ -493,67 +541,80 @@ export default function Home() {
             }
             className="col-span-3 h-screen"
           >
-            {selectedCertificate ? (
+            {certificateDetails[activeView] ? (
               <div className="p-4 space-y-6 font-mono">
-                <div className="border-b border-matrix-green/30 pb-2">
-                  <p className="text-[10px] text-matrix-green/50 mb-1">
-                    FILE_NAME
-                  </p>
-                  <p className="text-xs uppercase">
-                    {selectedCertificate.split("/").pop()}
-                  </p>
-                </div>
                 <div className="space-y-4">
                   <div>
-                    <p className="text-[10px] text-matrix-green/50">
-                      CERTIFICATION_TITLE
+                    <p className="text-[19px] text-matrix-green/50 ">
+                      <Typewriter text="CERTIFICATION_TITLE" />
                     </p>
-                    <p className="text-matrix-green font-bold uppercase">
-                      {certificateDetails[selectedCertificate]?.title}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-[10px] text-matrix-green/50">
-                      UNIVERSITY
-                    </p>
-                    <p className="text-sm opacity-80">
-                      {certificateDetails[selectedCertificate]?.uni}
+                    <p className="text-[19px] text-matrix-green font-bold uppercase opacity-90">
+                      <Typewriter text={certificateDetails[activeView]?.title || ""} delay={200} />
                     </p>
                   </div>
                   <div>
-                    <p className="text-[10px] text-matrix-green/50">
-                      DATE_ISSUED
+                    <p className="text-[19px] text-matrix-green/50">
+                      <Typewriter text="UNIVERSITY" delay={400} />
                     </p>
-                    <p className="text-sm opacity-80">
-                      {certificateDetails[selectedCertificate]?.issued}
+                    <p className="text-[19px] text-sm opacity-80">
+                      <Typewriter text={certificateDetails[activeView]?.uni || ""} delay={600} />
                     </p>
                   </div>
                   <div>
-                    <p className="text-[10px] text-matrix-green/50">LINK</p>
+                    <p className="text-[19px] text-matrix-green/50">
+                      <Typewriter text="DATE_ISSUED" delay={800} />
+                    </p>
+                    <p className="text-[19px] text-sm opacity-80">
+                      <Typewriter text={certificateDetails[activeView]?.issued || ""} delay={1000} />
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-[19px] text-matrix-green/50"><Typewriter text="LINK" delay={1200} /></p>
                     <a
-                      href={certificateDetails[selectedCertificate]?.link}
+                      href={certificateDetails[activeView]?.link}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-[#00f2ff] visited:text-[#00f2ff] hover:underline"
+                      className="text-[#00f2ff] text-[19px] visited:text-[#00f2ff] hover:underline"
                     >
-                      [VIEW_CREDENTIAL]
+                      <Typewriter text="[VIEW_CREDENTIAL]" delay={1400} />
                     </a>
+                    <p></p>
                   </div>
                 </div>
-                <div className="mt-12 p-2 bg-matrix-green/10 border-l-2 border-matrix-green text-[10px] leading-relaxed italic">
-                  Verified by the Council Authority. Identity hash confirmed.
+                <div className="text-[12px] mt-12 p-2 bg-matrix-green/10 border-l-2 border-matrix-green text-[10px] leading-relaxed italic">
+                  <Typewriter text="Verified by the Council Authority. Identity hash confirmed." delay={1600} />
                 </div>
               </div>
             ) : showGlobe ? (
-              <div className="h-full flex flex-col">
-                <div className="flex-1">
+              <div className="flex flex-col">
+                <div className="h-[400px]">
                   <AIGlobe subsystem={selectedSubsystem} />
                 </div>
-                <div className="mt-auto p-2 bg-matrix-green/5 border-t border-matrix-green/20 text-[10px]">
-                  <p className="text-matrix-green/60 mb-1">
-                    NODE_STREAMS_ACTIVE: {selectedSubsystem}
-                  </p>
-                  <p className="mb-2">
+                <div className="text-[11px] p-3 bg-matrix-green/5 border-t border-matrix-green/20 font-mono">
+                  <div className="mb-3">
+                    <p className="text-matrix-green/40 text-[9px] mb-1">
+                      NODE_STREAMS_ACTIVE
+                    </p>
+                    <p className="text-matrix-green font-bold text-xs">
+                      {selectedSubsystem?.replace(/_/g, " ")}
+                    </p>
+                  </div>
+
+                  <div className="space-y-1.5 mb-4">
+                    {selectedSubsystem &&
+                      subsystemData[selectedSubsystem]?.map((node, i) => (
+                        <div key={i} className="flex items-center gap-2 group">
+                          <span className="text-matrix-green/40 group-hover:text-matrix-green transition-colors text-[8px]">
+                            &gt;
+                          </span>
+                          <span className="text-[10px] uppercase opacity-70 group-hover:opacity-100 transition-opacity">
+                            {node.name}
+                          </span>
+                        </div>
+                      ))}
+                  </div>
+
+                  <p className="text-[9px] opacity-40 italic border-t border-matrix-green/10 pt-2">
                     Deep-diving into specific expertise nodes. Visualizing
                     neural architecture.
                   </p>
@@ -563,23 +624,23 @@ export default function Home() {
               <div className="p-4 space-y-6 font-mono">
                 <div className="border-b border-matrix-green/30 pb-2">
                   <p className="text-[10px] text-matrix-green/50 mb-1">
-                    DATA_ENTRY_NODE
+                    <Typewriter text="DATA_ENTRY_NODE" />
                   </p>
-                  <p className="text-xs uppercase">DOCUMENTATION_LOG</p>
+                  <p className="text-xs uppercase"><Typewriter text="DOCUMENTATION_LOG" delay={200} /></p>
                 </div>
                 <div className="space-y-4">
                   <p className="font-sans text-base leading-relaxed opacity-90 text-justify whitespace-pre-line px-1">
-                    {projectsData[activeView].description}
+                    <Typewriter text={projectsData[activeView].description} delay={400} speed={5} />
                   </p>
                 </div>
                 <div className="mt-12 p-2 bg-matrix-green/10 border-l-2 border-matrix-green text-[10px] leading-relaxed italic">
-                  Project metadata successfully decoded. Analysis complete.
+                  <Typewriter text="Project metadata successfully decoded. Analysis complete." delay={1000} />
                 </div>
               </div>
             ) : activeView === "about" ||
               activeView === "education" ||
               activeView === "work" ? (
-              <div className="flex flex-col items-center gap-8 p-6 pt-12">
+              <div className="flex flex-col items-center gap-3 p-2 pt-2">
                 {/* Profile Picture Frame */}
                 <div className="relative w-40 h-40 border-2 border-matrix-green/30 p-1 bg-black/50">
                   <div className="absolute -top-1 -left-1 w-4 h-4 border-t-2 border-l-2 border-matrix-green" />
@@ -601,22 +662,75 @@ export default function Home() {
                   </div>
                 </div>
 
-                <div className="text-center space-y-4 w-full">
-                  <div className="py-2 border-y border-matrix-green/10">
-                    <p className="text-[10px] text-matrix-green/60 uppercase tracking-[0.3em]">
-                      Identity_Verified
+                <div className="text-center space-y-1 w-full">
+                  <div className="p-0 border-y border-matrix-green/10">
+                    <h3 className="text-[12px] text-matrix-green font-semibold uppercase tracking-[0.3em] [text-shadow:0_0_8px_rgba(0,255,65,1),0_0_18px_rgba(0,255,65,0.9)]">
+                      <Typewriter text="DATE OF BIRTH" />
+                    </h3>
+                    <p className="text-sm opacity-80"><Typewriter text="2000 APRIL 03" delay={200} /></p>
+                  </div>
+                  <div className="py-0.5 border-y border-matrix-green/10">
+                    <h3 className="text-[12px] text-matrix-green font-semibold uppercase tracking-[0.3em] [text-shadow:0_0_8px_rgba(0,255,65,1),0_0_18px_rgba(0,255,65,0.9)]">
+                      <Typewriter text="GENDER" delay={400} />
+                    </h3>
+                    <p className="text-sm opacity-80"><Typewriter text="MALE" delay={600} /></p>
+                  </div>
+                  <div className="py-0.5 border-y border-matrix-green/10">
+                    <h3 className="text-[12px] text-matrix-green font-semibold uppercase tracking-[0.3em] [text-shadow:0_0_8px_rgba(0,255,65,1),0_0_18px_rgba(0,255,65,0.9)]">
+                      <Typewriter text="ADDRESS" delay={800} />
+                    </h3>
+                    <p className="text-sm opacity-80 leading-tight uppercase p-0">
+                      <Typewriter text="20E, 4th Lane, Pepiliyana Mawatha, Nugegoda." delay={1000} />
                     </p>
                   </div>
-                  <a
-                    href="/CV.pdf"
-                    download
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-[#00f2ff] visited:text-[#00f2ff] hover:scale-110 transition-transform duration-300 drop-shadow-[0_0_8px_rgba(0,242,255,0.5)]"
-                  >
-                    <span className="group-hover:animate-bounce">↓</span>
-                    [DOWNLOAD_CV.EXE]
-                  </a>
+                  <div className="py-0.5 border-y border-matrix-green/10">
+                    <h3 className="text-[12px] text-matrix-green font-semibold uppercase tracking-[0.3em] [text-shadow:0_0_8px_rgba(0,255,65,1),0_0_18px_rgba(0,255,65,0.9)]">
+                      <Typewriter text="EMAIL" delay={1200} />
+                    </h3>
+                    <a
+                      href="mailto:shehanuyanwatte2000@gmail.com"
+                      className="text-sm text-[#00f2ff] hover:underline"
+                    >
+                      <Typewriter text="shehanuyanwatte2000@gmail.com" delay={1400} />
+                    </a>
+                    <p></p>
+                  </div>
+                  <div className="py-0.5 border-y border-matrix-green/10">
+                    <a
+                      href="/CV.pdf"
+                      download
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-block py-1 text-base text-[#00f2ff] visited:text-[#00f2ff] hover:scale-110 transition-transform duration-300 drop-shadow-[0_0_8px_rgba(0,242,255,0.5)]"
+                    >
+                      <span className="group-hover:animate-bounce"><Typewriter text="↓" delay={1600} /></span>
+                      <Typewriter text="[DOWNLOAD_CV.EXE]" delay={1700} />
+                      <span className="group-hover:animate-bounce"><Typewriter text="↓" delay={1600} /></span>
+                    </a>
+                    <p></p>
+                  </div>
+                  <div className="py-0.5 border-y border-matrix-green/10">
+                    <p></p>
+                    <a
+                      href="https://www.linkedin.com/in/shehan-uyanwatte-b94805272/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-block py-1 text-base text-[#00f2ff] visited:text-[#00f2ff] hover:scale-110 transition-transform duration-300 drop-shadow-[0_0_8px_rgba(0,242,255,0.5)]"
+                    >
+                      <span className="group-hover:animate-bounce"></span>
+                      <Typewriter text="[LINKEDIN]" delay={2000} />
+                    </a>
+                    <span>|||</span>
+                    <a
+                      href="https://github.com/shehan2k"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-block py-1 text-base text-[#00f2ff] visited:text-[#00f2ff] hover:scale-110 transition-transform duration-300 drop-shadow-[0_0_8px_rgba(0,242,255,0.5)]"
+                    >
+                      <span className="group-hover:animate-bounce"></span>
+                      <Typewriter text="[GITHUB]" delay={2200} />
+                    </a>
+                  </div>
                 </div>
               </div>
             ) : (
