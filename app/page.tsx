@@ -106,6 +106,18 @@ export default function Home() {
       description:
         "Developed a GPS Navigation System using PROLOG, that provides the best possible route from one point to another based on reward functions. This inferrence is done by analyzing various attributes such as Distance, Vehicle Type, Weather, Traffic etc.",
     },
+    "project-6": {
+      title: "AEGIS_CLASSIFICATION_SYSTEM",
+      images: ["/aegis1.png", "/aegis2.png"],
+      description:
+        "Developed an AEGIS Classification System using Python and Numpy, designed to classify entities into friendly or enemy categories based on their characteristics.",
+    },
+    "project-7": {
+      title: "SLANG-GPT",
+      images: ["/slanggpt1.png", "/slanggpt2.png"],
+      description:
+        "Developed SlangGPT, a language model that can translate standard language into Gen Z slang.\n\nTrained on a custom dataset of Gen Z slang phrases and their standard language equivalents, using a transformer architecture implemented in PyTorch. \n\nCustom Generative Architecture: Built a native decoder-only Transformer entirely from scratch using PyTorch, implementing multi-head self-attention mechanisms and causal masking.\n\nTokenization Upgrade: Moved away from basic character-level mapping to a high-efficiency subword tokenizer using OpenAI’s tiktoken (GPT-2 encoding), expanding the model's vocabulary matrix to approx 50K tokens to better track semantic dependencies.\n\n Inference Optimization: Implemented custom Temperature scaling at inference time to lock down pronoun consistency and strictly regulate structural confidence.",
+    },
   };
 
   const [isLoading, setIsLoading] = useState(true);
@@ -275,6 +287,26 @@ export default function Home() {
               </div>
               {openFolders.config && (
                 <>
+                   <div
+                    className={`flex items-center gap-1 ml-4 cursor-pointer hover:text-matrix-green transition-colors ${activeView === "project-7" ? "text-matrix-green" : "opacity-60"}`}
+                    onClick={() => {
+                      setActiveView("project-7");
+                      setShowGlobe(false);
+                      setCurrentProjectImageIdx(0);
+                    }}
+                  >
+                    <span>📄</span> SlangGPT
+                  </div>
+                  <div
+                    className={`flex items-center gap-1 ml-4 cursor-pointer hover:text-matrix-green transition-colors ${activeView === "project-6" ? "text-matrix-green" : "opacity-60"}`}
+                    onClick={() => {
+                      setActiveView("project-6");
+                      setShowGlobe(false);
+                      setCurrentProjectImageIdx(0);
+                    }}
+                  >
+                    <span>📄</span> AEGIS Classification System
+                  </div>
                   <div
                     className={`flex items-center gap-1 ml-4 cursor-pointer hover:text-matrix-green transition-colors ${activeView === "project-1" ? "text-matrix-green" : "opacity-60"}`}
                     onClick={() => {

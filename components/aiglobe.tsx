@@ -18,7 +18,7 @@ export const subsystemData: Record<string, { name: string; position: [number, nu
     { name: "Neural Networks", position: [-0.63, 1.79, 0.63] },
     { name: "TensorFlow", position: [0.00, -0.66, 1.89] },
     { name: "Numpy", position: [1.39, -1.30, -0.61] },
-    { name: "????", position: [-1.36, 1.36, -0.52] },
+    { name: "PyTorch", position: [-1.36, 1.36, -0.52] },
   ],
   Specialized_AI: [
     { name: "Neuro Symbolic AI", position: [1.90, 0.63, 0.00] },
@@ -38,7 +38,7 @@ export const subsystemData: Record<string, { name: string; position: [number, nu
     { name: "LLMOps", position: [1.90, 0.63, 0.00] },
     { name: "LangChain", position: [-0.63, 1.79, 0.63] },
     { name: "Vertex AI", position: [0.00, -0.66, 1.89] }, 
-    { name: "????", position: [1.39, -1.30, -0.61] },
+    { name: "Custom GPTs", position: [1.39, -1.30, -0.61] },
     { name: "Prompt Engineering", position: [-1.36, 1.36, -0.52] },
   ],
   Mobile_and_Web_Development: [
