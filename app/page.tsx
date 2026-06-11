@@ -9,7 +9,15 @@ import AIGlobe, { subsystemData } from "@/components/aiglobe";
 import AIGalaxyView from "@/components/aigalaxy";
 import LoadingScreen from "@/components/loadingscreen";
 
-const Typewriter = ({ text, delay = 0, speed = 10 }: { text: string; delay?: number; speed?: number }) => {
+const Typewriter = ({
+  text,
+  delay = 0,
+  speed = 10,
+}: {
+  text: string;
+  delay?: number;
+  speed?: number;
+}) => {
   const [displayText, setDisplayText] = useState("");
 
   useEffect(() => {
@@ -118,6 +126,18 @@ export default function Home() {
       description:
         "Developed SlangGPT, a language model that can translate standard language into Gen Z slang.\n\nTrained on a custom dataset of Gen Z slang phrases and their standard language equivalents, using a transformer architecture implemented in PyTorch. \n\nCustom Generative Architecture: Built a native decoder-only Transformer entirely from scratch using PyTorch, implementing multi-head self-attention mechanisms and causal masking.\n\nTokenization Upgrade: Moved away from basic character-level mapping to a high-efficiency subword tokenizer using OpenAI’s tiktoken (GPT-2 encoding), expanding the model's vocabulary matrix to approx 50K tokens to better track semantic dependencies.\n\n Inference Optimization: Implemented custom Temperature scaling at inference time to lock down pronoun consistency and strictly regulate structural confidence.",
     },
+    "project-8": {
+      title: "ASTRAL",
+      images: ["/astralgpt1.png", "/astralgpt2.png"],
+      description:
+        "Astral is a full-stack generative AI application featuring a custom-trained 123M-parameter autoregressive Transformer model. Built entirely from scratch—from binary data serialization to deep learning optimization and web deployment—the project serves as a comprehensive proof-of-concept for localized, domain-specific language model infrastructure.\n\nUses Pytorch,Tiktoken as Deep Learning Framework, and React with NextJS for the frontend and FastAPI, Uvicorn, Python as backend. The model is trained on a custom dataset of 10K+ story prompts and completions. The application includes a user-friendly interface for generating stories, demonstrating the potential of custom-trained language models in creative applications.",
+    },
+    "project-9": {
+      title: "FLUX",
+      images: ["/flux1.png", "/flux2.png"],
+      description:
+        "A privacy-first, fully local Retrieval-Augmented Generation (RAG) platform that grants real-time internet search capabilities to open-source Large Language Models running entirely on consumer hardware.\n\nSolved the cognitive limitations of a tiny 1-billion parameter model by using Few-Shot Prompting Patterns to guarantee it generates multi-word search queries instead of single keywords.\n\nDesigned the pipeline to run entirely without heavy database setups or Docker containers, relying instead on lightweight python web-scrapers to dynamically pull live data.",
+    }
   };
 
   const [isLoading, setIsLoading] = useState(true);
@@ -287,7 +307,27 @@ export default function Home() {
               </div>
               {openFolders.config && (
                 <>
+                  <div
+                    className={`flex items-center gap-1 ml-4 cursor-pointer hover:text-matrix-green transition-colors ${activeView === "project-9" ? "text-matrix-green" : "opacity-60"}`}
+                    onClick={() => {
+                      setActiveView("project-9");
+                      setShowGlobe(false);
+                      setCurrentProjectImageIdx(0);
+                    }}
+                  >
+                    <span>📄</span> Flux:V1.0:WebRAG
+                  </div>
                    <div
+                    className={`flex items-center gap-1 ml-4 cursor-pointer hover:text-matrix-green transition-colors ${activeView === "project-8" ? "text-matrix-green" : "opacity-60"}`}
+                    onClick={() => {
+                      setActiveView("project-8");
+                      setShowGlobe(false);
+                      setCurrentProjectImageIdx(0);
+                    }}
+                  >
+                    <span>📄</span> Astral:V1.0:123M
+                  </div>
+                  <div
                     className={`flex items-center gap-1 ml-4 cursor-pointer hover:text-matrix-green transition-colors ${activeView === "project-7" ? "text-matrix-green" : "opacity-60"}`}
                     onClick={() => {
                       setActiveView("project-7");
@@ -397,10 +437,16 @@ export default function Home() {
                   <Typewriter text="Shehan Uyanwatte" />
                 </h1>
                 <p className="mt-4">
-                  <Typewriter text="BSc IT Undergraduate | The Open University of Sri Lanka" delay={300} />
+                  <Typewriter
+                    text="BSc IT Undergraduate | The Open University of Sri Lanka"
+                    delay={300}
+                  />
                 </p>
                 <p className="mt-4">
-                  <Typewriter text="I'm a Proactive and results-driven student eager to contribute my skills and learn from industry experts. I'm actively seeking opportunities to gain hands-on experience and build professional connections" delay={800} />
+                  <Typewriter
+                    text="I'm a Proactive and results-driven student eager to contribute my skills and learn from industry experts. I'm actively seeking opportunities to gain hands-on experience and build professional connections"
+                    delay={800}
+                  />
                 </p>
               </>
             ) : activeView === "education" ? (
@@ -411,26 +457,44 @@ export default function Home() {
                 <div className="space-y-4">
                   <div>
                     <h4 className="text-matrix-green font-bold">
-                      <Typewriter text="St. Peter's College - Bambalapitiya (2006 - 2019)" delay={300} />
+                      <Typewriter
+                        text="St. Peter's College - Bambalapitiya (2006 - 2019)"
+                        delay={300}
+                      />
                     </h4>
                     <p className="text-sm opacity-80 mt-1">
-                      <Typewriter text="O/L - 7A 2C | A/L - 2C 1W" delay={800} />
+                      <Typewriter
+                        text="O/L - 7A 2C | A/L - 2C 1W"
+                        delay={800}
+                      />
                     </p>
                   </div>
                   <div>
                     <h4 className="text-matrix-green font-bold">
-                      <Typewriter text="The Open University of Sri Lanka (2021 - 2022)" delay={1200} />
+                      <Typewriter
+                        text="The Open University of Sri Lanka (2021 - 2022)"
+                        delay={1200}
+                      />
                     </h4>
                     <p className="text-sm opacity-80 mt-1">
-                      <Typewriter text="Adv. Certificate in Science" delay={1700} />
+                      <Typewriter
+                        text="Adv. Certificate in Science"
+                        delay={1700}
+                      />
                     </p>
                   </div>
                   <div>
                     <h4 className="text-matrix-green font-bold">
-                      <Typewriter text="The Open University of Sri Lanka (2023 - Present)" delay={2200} />
+                      <Typewriter
+                        text="The Open University of Sri Lanka (2023 - Present)"
+                        delay={2200}
+                      />
                     </h4>
                     <p className="text-sm opacity-80 mt-1">
-                      <Typewriter text="BSc Information Technology" delay={2700} />
+                      <Typewriter
+                        text="BSc Information Technology"
+                        delay={2700}
+                      />
                     </p>
                   </div>
                 </div>
@@ -443,48 +507,84 @@ export default function Home() {
                 <div className="space-y-6">
                   <div>
                     <h4 className="text-matrix-green font-bold">
-                      <Typewriter text="Data Entry Operator - Commercial Bank (2021 Apr - 2022 Nov)" delay={300} />
+                      <Typewriter
+                        text="Data Entry Operator - Commercial Bank (2021 Apr - 2022 Nov)"
+                        delay={300}
+                      />
                     </h4>
                     <p className="text-xs opacity-80 mt-1">
-                      <Typewriter text="- Contributed to the branch's operational efficiency by accurately updating data in various databases." delay={900} />
+                      <Typewriter
+                        text="- Contributed to the branch's operational efficiency by accurately updating data in various databases."
+                        delay={900}
+                      />
                     </p>
                     <p className="text-xs opacity-80 mt-1">
-                      <Typewriter text="- Collaborated with team members to ensure all data entry tasks were completed efficiently and on time." delay={1600} />
+                      <Typewriter
+                        text="- Collaborated with team members to ensure all data entry tasks were completed efficiently and on time."
+                        delay={1600}
+                      />
                     </p>
                   </div>
                   <div>
                     <h4 className="text-matrix-green font-bold">
-                      <Typewriter text="Data Entry Operator - AV Business Solutions Pvt Ltd (2022 Nov - 2023 May)" delay={2400} />
+                      <Typewriter
+                        text="Data Entry Operator - AV Business Solutions Pvt Ltd (2022 Nov - 2023 May)"
+                        delay={2400}
+                      />
                     </h4>
                     <p className="text-xs opacity-80 mt-1">
-                      <Typewriter text="- Handled all aspects of customer payment updates, ensuring precision and professionalism in every transaction." delay={3200} />
+                      <Typewriter
+                        text="- Handled all aspects of customer payment updates, ensuring precision and professionalism in every transaction."
+                        delay={3200}
+                      />
                     </p>
                     <p className="text-xs opacity-80 mt-1">
-                      <Typewriter text="- Promoted to a role handling company-wide email inquiries from customers, demonstrating a strong ability to manage communication and resolve issues." delay={4000} />
-                    </p>
-                  </div>
-                  <div>
-                    <h4 className="text-matrix-green font-bold">
-                      <Typewriter text="Quality Control Specialist - AV Business Solutions Pvt Ltd (2023 May - 2024 July)" delay={5200} />
-                    </h4>
-                    <p className="text-xs opacity-80 mt-1">
-                      <Typewriter text="- Evaluated and analyzed customer care agent interactions to measure performance and identify training needs." delay={6000} />
-                    </p>
-                  </div>
-                  <div>
-                    <h4 className="text-matrix-green font-bold">
-                      <Typewriter text="Quality Control Supervisor - AV Business Solutions (2024 - 2025)" delay={6800} />
-                    </h4>
-                    <p className="text-xs opacity-80 mt-1">
-                      <Typewriter text="- Supervised a four-member team on Quality Control tasks while also assisting in the training and development of new customer care agents." delay={7600} />
+                      <Typewriter
+                        text="- Promoted to a role handling company-wide email inquiries from customers, demonstrating a strong ability to manage communication and resolve issues."
+                        delay={4000}
+                      />
                     </p>
                   </div>
                   <div>
                     <h4 className="text-matrix-green font-bold">
-                      <Typewriter text="IT Intern - AMW Capital Leasing (2026 Feb - Present)" delay={8600} />
+                      <Typewriter
+                        text="Quality Control Specialist - AV Business Solutions Pvt Ltd (2023 May - 2024 July)"
+                        delay={5200}
+                      />
                     </h4>
                     <p className="text-xs opacity-80 mt-1">
-                      <Typewriter text="Currently working as an IT Intern at AMW Capital Leasing And Finance PLC, where I am gaining hands-on experience in IT support, system maintenance, and troubleshooting, while also contributing to various IT projects and initiatives within the company." delay={9400} />
+                      <Typewriter
+                        text="- Evaluated and analyzed customer care agent interactions to measure performance and identify training needs."
+                        delay={6000}
+                      />
+                    </p>
+                  </div>
+                  <div>
+                    <h4 className="text-matrix-green font-bold">
+                      <Typewriter
+                        text="Quality Control Supervisor - AV Business Solutions (2024 - 2025)"
+                        delay={6800}
+                      />
+                    </h4>
+                    <p className="text-xs opacity-80 mt-1">
+                      <Typewriter
+                        text="- Supervised a four-member team on Quality Control tasks while also assisting in the training and development of new customer care agents."
+                        delay={7600}
+                      />
+                    </p>
+                  </div>
+                  <div>
+                    <h4 className="text-matrix-green font-bold">
+                      <Typewriter
+                        text="IT Intern - AMW Capital Leasing (2026 Feb - Present)"
+                        delay={8600}
+                      />
+                    </h4>
+                    <p className="text-xs opacity-80 mt-1">
+                      <Typewriter
+                        text="Currently working as an IT Intern at AMW Capital Leasing And Finance PLC, where I am gaining hands-on experience in IT support, system maintenance, and troubleshooting, while also contributing to various IT projects and initiatives within the company."
+                        delay={9400}
+                      />
                     </p>
                   </div>
                 </div>
@@ -581,7 +681,10 @@ export default function Home() {
                       <Typewriter text="CERTIFICATION_TITLE" />
                     </p>
                     <p className="text-[19px] text-matrix-green font-bold uppercase opacity-90">
-                      <Typewriter text={certificateDetails[activeView]?.title || ""} delay={200} />
+                      <Typewriter
+                        text={certificateDetails[activeView]?.title || ""}
+                        delay={200}
+                      />
                     </p>
                   </div>
                   <div>
@@ -589,7 +692,10 @@ export default function Home() {
                       <Typewriter text="UNIVERSITY" delay={400} />
                     </p>
                     <p className="text-[19px] text-sm opacity-80">
-                      <Typewriter text={certificateDetails[activeView]?.uni || ""} delay={600} />
+                      <Typewriter
+                        text={certificateDetails[activeView]?.uni || ""}
+                        delay={600}
+                      />
                     </p>
                   </div>
                   <div>
@@ -597,11 +703,16 @@ export default function Home() {
                       <Typewriter text="DATE_ISSUED" delay={800} />
                     </p>
                     <p className="text-[19px] text-sm opacity-80">
-                      <Typewriter text={certificateDetails[activeView]?.issued || ""} delay={1000} />
+                      <Typewriter
+                        text={certificateDetails[activeView]?.issued || ""}
+                        delay={1000}
+                      />
                     </p>
                   </div>
                   <div>
-                    <p className="text-[19px] text-matrix-green/50"><Typewriter text="LINK" delay={1200} /></p>
+                    <p className="text-[19px] text-matrix-green/50">
+                      <Typewriter text="LINK" delay={1200} />
+                    </p>
                     <a
                       href={certificateDetails[activeView]?.link}
                       target="_blank"
@@ -614,7 +725,10 @@ export default function Home() {
                   </div>
                 </div>
                 <div className="text-[12px] mt-12 p-2 bg-matrix-green/10 border-l-2 border-matrix-green text-[10px] leading-relaxed italic">
-                  <Typewriter text="Verified by the Council Authority. Identity hash confirmed." delay={1600} />
+                  <Typewriter
+                    text="Verified by the Council Authority. Identity hash confirmed."
+                    delay={1600}
+                  />
                 </div>
               </div>
             ) : showGlobe ? (
@@ -658,15 +772,24 @@ export default function Home() {
                   <p className="text-[10px] text-matrix-green/50 mb-1">
                     <Typewriter text="DATA_ENTRY_NODE" />
                   </p>
-                  <p className="text-xs uppercase"><Typewriter text="DOCUMENTATION_LOG" delay={200} /></p>
+                  <p className="text-xs uppercase">
+                    <Typewriter text="DOCUMENTATION_LOG" delay={200} />
+                  </p>
                 </div>
                 <div className="space-y-4">
                   <p className="font-sans text-base leading-relaxed opacity-90 text-justify whitespace-pre-line px-1">
-                    <Typewriter text={projectsData[activeView].description} delay={400} speed={5} />
+                    <Typewriter
+                      text={projectsData[activeView].description}
+                      delay={400}
+                      speed={5}
+                    />
                   </p>
                 </div>
                 <div className="mt-12 p-2 bg-matrix-green/10 border-l-2 border-matrix-green text-[10px] leading-relaxed italic">
-                  <Typewriter text="Project metadata successfully decoded. Analysis complete." delay={1000} />
+                  <Typewriter
+                    text="Project metadata successfully decoded. Analysis complete."
+                    delay={1000}
+                  />
                 </div>
               </div>
             ) : activeView === "about" ||
@@ -699,20 +822,27 @@ export default function Home() {
                     <h3 className="text-[12px] text-matrix-green font-semibold uppercase tracking-[0.3em] [text-shadow:0_0_8px_rgba(0,255,65,1),0_0_18px_rgba(0,255,65,0.9)]">
                       <Typewriter text="DATE OF BIRTH" />
                     </h3>
-                    <p className="text-sm opacity-80"><Typewriter text="2000 APRIL 03" delay={200} /></p>
+                    <p className="text-sm opacity-80">
+                      <Typewriter text="2000 APRIL 03" delay={200} />
+                    </p>
                   </div>
                   <div className="py-0.5 border-y border-matrix-green/10">
                     <h3 className="text-[12px] text-matrix-green font-semibold uppercase tracking-[0.3em] [text-shadow:0_0_8px_rgba(0,255,65,1),0_0_18px_rgba(0,255,65,0.9)]">
                       <Typewriter text="GENDER" delay={400} />
                     </h3>
-                    <p className="text-sm opacity-80"><Typewriter text="MALE" delay={600} /></p>
+                    <p className="text-sm opacity-80">
+                      <Typewriter text="MALE" delay={600} />
+                    </p>
                   </div>
                   <div className="py-0.5 border-y border-matrix-green/10">
                     <h3 className="text-[12px] text-matrix-green font-semibold uppercase tracking-[0.3em] [text-shadow:0_0_8px_rgba(0,255,65,1),0_0_18px_rgba(0,255,65,0.9)]">
                       <Typewriter text="ADDRESS" delay={800} />
                     </h3>
                     <p className="text-sm opacity-80 leading-tight uppercase p-0">
-                      <Typewriter text="20E, 4th Lane, Pepiliyana Mawatha, Nugegoda." delay={1000} />
+                      <Typewriter
+                        text="20E, 4th Lane, Pepiliyana Mawatha, Nugegoda."
+                        delay={1000}
+                      />
                     </p>
                   </div>
                   <div className="py-0.5 border-y border-matrix-green/10">
@@ -723,7 +853,10 @@ export default function Home() {
                       href="mailto:shehanuyanwatte2000@gmail.com"
                       className="text-sm text-[#00f2ff] hover:underline"
                     >
-                      <Typewriter text="shehanuyanwatte2000@gmail.com" delay={1400} />
+                      <Typewriter
+                        text="shehanuyanwatte2000@gmail.com"
+                        delay={1400}
+                      />
                     </a>
                     <p></p>
                   </div>
@@ -735,9 +868,13 @@ export default function Home() {
                       rel="noopener noreferrer"
                       className="inline-block py-1 text-base text-[#00f2ff] visited:text-[#00f2ff] hover:scale-110 transition-transform duration-300 drop-shadow-[0_0_8px_rgba(0,242,255,0.5)]"
                     >
-                      <span className="group-hover:animate-bounce"><Typewriter text="↓" delay={1600} /></span>
+                      <span className="group-hover:animate-bounce">
+                        <Typewriter text="↓" delay={1600} />
+                      </span>
                       <Typewriter text="[DOWNLOAD_CV.EXE]" delay={1700} />
-                      <span className="group-hover:animate-bounce"><Typewriter text="↓" delay={1600} /></span>
+                      <span className="group-hover:animate-bounce">
+                        <Typewriter text="↓" delay={1600} />
+                      </span>
                     </a>
                     <p></p>
                   </div>

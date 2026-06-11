@@ -39,7 +39,7 @@ export const subsystemData: Record<string, { name: string; position: [number, nu
     { name: "LangChain", position: [-0.63, 1.79, 0.63] },
     { name: "Vertex AI", position: [0.00, -0.66, 1.89] }, 
     { name: "Custom GPTs", position: [1.39, -1.30, -0.61] },
-    { name: "Prompt Engineering", position: [-1.36, 1.36, -0.52] },
+    { name: "Transformers", position: [-1.36, 1.36, -0.52] },
   ],
   Mobile_and_Web_Development: [
     { name: "React Native", position: [1.90, 0.63, 0.00] },
