@@ -82,62 +82,109 @@ export default function Home() {
 
   const projectsData: Record<
     string,
-    { title: string; images: [string, string]; description: string }
+    {
+      title: string;
+      images: [string, string];
+      description: string;
+      technicalXP: string[];
+    }
   > = {
     "project-1": {
       title: "NEURO_SYMBOLIC_AI_MATH_SOLVER",
       images: ["/performance.png", "/graph.png"],
       description:
         "Designed and implemented a Neuro-Symbolic AI Math Solver using Python, combining a Llama 3.2:1B model for natural language processing and Sympy for symbolic mathematics to solve complex mathematical problems. It uses the speed and efficiency of the 1B parameter model to interpret and process Natural Language, while leveraging Sympy's powerful symbolic computation capabilities to provide accurate solutions.",
+      technicalXP: [
+        "Python",
+        "LLMOps",
+        "Sympy",
+        "NLP",
+        "Neuro-Symbolic AI",
+        "LLM",
+      ],
     },
     "project-2": {
       title: "APPAREL_MARKETPLACE",
       images: ["/app1.png", "/app2.png"],
       description:
         "Authored a comprehensive business case and designed high-fidelity Figma prototypes to define user journeys and stakeholders' requirements.\n\nArchitected a cross-platform marketplace using React Native (Expo) and TypeScript, integrating Firebase for streamlined authentication and account management. \n\nEngineered a dual-role user system using Firestore (NoSQL) to manage permissions and secure data access for both vendors and customers. Enhanced security by implementing biometric authentication (FaceID/Fingerprint) utilizing Expo’s native modules. \n\nDeveloped comprehensive vendor management features, including real-time product inventory updates and account information updates.",
+      technicalXP: [
+        "React Native",
+        "TypeScript",
+        "Firebase",
+        "Firestore",
+        "React Expo",
+        "Figma",
+        "Neo4J",
+        "AuraDB",
+      ],
     },
     "project-3": {
       title: "MOCK_ATM_SYSTEM",
       images: ["/ATM1.png", "/ATM2.png"],
       description:
         "Developed a mock ATM system using Java, simulating core banking functionalities like Authentication, Deposit, Withdrawal, Account balance inquiry etc .",
+      technicalXP: ["Java"],
     },
     "project-4": {
       title: "MEDICAL_EXPERT_SYSTEM",
       images: ["/MED1.png", "/MED2.png"],
       description:
         "Developed a Medical Expert System using PROLOG, simulating a diagnostic system for common medical conditions via a given number of symptoms. Uses a Knowledge Base and Predicates to Infer and provide possible diagnoses based on user input.",
+      technicalXP: [
+        "PROLOG",
+        "Knowledge Base",
+        "Predicates",
+        "Inference Engine",
+        "Expert Systems",
+      ],
     },
     "project-5": {
       title: "GPS_NAVIGATION_SYSTEM",
       images: ["/map.png", "/map2.png"],
       description:
         "Developed a GPS Navigation System using PROLOG, that provides the best possible route from one point to another based on reward functions. This inferrence is done by analyzing various attributes such as Distance, Vehicle Type, Weather, Traffic etc.",
+      technicalXP: ["PROLOG", "Reward Functions", "Route Optimization",
+        "Search Algorithms",
+        "DFS",
+      ],
     },
     "project-6": {
       title: "AEGIS_CLASSIFICATION_SYSTEM",
       images: ["/aegis1.png", "/aegis2.png"],
       description:
         "Developed an AEGIS Classification System using Python and Numpy, designed to classify entities into friendly or enemy categories based on their characteristics.",
+      technicalXP: ["Python", "Numpy", "Machine Learning", "Classification",
+        "Artificial Neural Networks","Supervised Learning", "Min-Max Normalization", "Streamlit", "Sigmoid Function"
+      ],
     },
     "project-7": {
       title: "SLANG-GPT",
       images: ["/slanggpt1.png", "/slanggpt2.png"],
       description:
         "Developed SlangGPT, a language model that can translate standard language into Gen Z slang.\n\nTrained on a custom dataset of Gen Z slang phrases and their standard language equivalents, using a transformer architecture implemented in PyTorch. \n\nCustom Generative Architecture: Built a native decoder-only Transformer entirely from scratch using PyTorch, implementing multi-head self-attention mechanisms and causal masking.\n\nTokenization Upgrade: Moved away from basic character-level mapping to a high-efficiency subword tokenizer using OpenAI’s tiktoken (GPT-2 encoding), expanding the model's vocabulary matrix to approx 50K tokens to better track semantic dependencies.\n\n Inference Optimization: Implemented custom Temperature scaling at inference time to lock down pronoun consistency and strictly regulate structural confidence.",
+      technicalXP: [
+        "Python",
+        "PyTorch",
+        "Transformers",
+        "Natural Language Processing",
+        "Tiktoken",
+      ],
     },
     "project-8": {
       title: "ASTRAL",
       images: ["/astralgpt1.png", "/astralgpt2.png"],
       description:
         "Astral is a full-stack generative AI application featuring a custom-trained 123M-parameter autoregressive Transformer model. Built entirely from scratch—from binary data serialization to deep learning optimization and web deployment—the project serves as a comprehensive proof-of-concept for localized, domain-specific language model infrastructure.\n\nUses Pytorch,Tiktoken as Deep Learning Framework, and React with NextJS for the frontend and FastAPI, Uvicorn, Python as backend. The model is trained on a custom dataset of 10K+ story prompts and completions. The application includes a user-friendly interface for generating stories, demonstrating the potential of custom-trained language models in creative applications.",
+      technicalXP: ["Python", "NextJS", "FastAPI", "Uvicorn", "PyTorch", "Tiktoken", ],
     },
     "project-9": {
       title: "FLUX",
       images: ["/flux1.png", "/flux2.png"],
       description:
         "A privacy-first, fully local Retrieval-Augmented Generation (RAG) platform that grants real-time internet search capabilities to open-source Large Language Models running entirely on consumer hardware.\n\nSolved the cognitive limitations of a tiny 1-billion parameter model by using Few-Shot Prompting Patterns to guarantee it generates multi-word search queries instead of single keywords.\n\nDesigned the pipeline to run entirely without heavy database setups or Docker containers, relying instead on lightweight python web-scrapers to dynamically pull live data.",
-    }
+      technicalXP: ["Python", "FastAPI", "Uvicorn", "Web Scraping", "LLM Prompting", "RAG Systems", "LLMOps"],
+    },
   };
 
   const [isLoading, setIsLoading] = useState(true);
@@ -317,7 +364,7 @@ export default function Home() {
                   >
                     <span>📄</span> Flux:V1.0:WebRAG
                   </div>
-                   <div
+                  <div
                     className={`flex items-center gap-1 ml-4 cursor-pointer hover:text-matrix-green transition-colors ${activeView === "project-8" ? "text-matrix-green" : "opacity-60"}`}
                     onClick={() => {
                       setActiveView("project-8");
@@ -633,6 +680,23 @@ export default function Home() {
                   >
                     &gt;
                   </button>
+                </div>
+                <div>
+                  <h3 style={{ fontSize: "16px", fontWeight: "bold", marginBottom: "8px"}}>Technical XP:</h3>
+                </div>
+                <div
+                  className="flex flex-wrap items-start"
+                  style={{ gap: "8px" }}
+                >
+                  {projectsData[activeView].technicalXP.map((xp, i) => (
+                    <div
+                      key={i}
+                      className="inline-flex items-center leading-none text-[14px] bg-matrix-green/20 border border-matrix-green/30 rounded font-mono whitespace-nowrap"
+                      style={{ padding: "2px 5px" }}
+                    >
+                      {xp}
+                    </div>
+                  ))}
                 </div>
               </div>
             ) : activeView === "xp-galaxy" ? (
